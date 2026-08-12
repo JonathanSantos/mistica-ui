@@ -1,0 +1,117 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './styles/mistica-vivo.css';
+/* Overlay compacto para sistemas internos (densidade HD). Escopado por
+   [data-skin="vivo-new-system"] no <html>, entao e seguro importar sempre. */
+@import './styles/mistica-vivo-new-system.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Mapeamento semantico shadcn/ui -> tokens Mistica (skin vivo / new-vivo).
+ * Componentes shadcn "de prateleira" funcionam com esses nomes; os componentes
+ * deste projeto tambem usam os tokens mistica-* diretamente quando precisam
+ * de mais fidelidade (hover/pressed, tags, controles, etc).
+ */
+@theme inline {
+    --font-sans:
+        'Vivo Type', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+        sans-serif;
+
+    --color-background: var(--mistica-background);
+    --color-foreground: var(--mistica-text-primary);
+    --color-card: var(--mistica-background-container);
+    --color-card-foreground: var(--mistica-text-primary);
+    --color-popover: var(--mistica-background-container);
+    --color-popover-foreground: var(--mistica-text-primary);
+    --color-primary: var(--mistica-button-primary-background);
+    --color-primary-foreground: var(--mistica-text-button-primary);
+    --color-secondary: var(--mistica-background-alternative);
+    --color-secondary-foreground: var(--mistica-text-primary);
+    --color-muted: var(--mistica-background-alternative);
+    --color-muted-foreground: var(--mistica-text-secondary);
+    --color-accent: var(--mistica-background-alternative);
+    --color-accent-foreground: var(--mistica-text-primary);
+    --color-destructive: var(--mistica-button-danger-background);
+    --color-destructive-foreground: var(--mistica-text-button-primary);
+    --color-border: var(--mistica-border);
+    --color-input: var(--mistica-input-border);
+    --color-ring: var(--mistica-control-activated);
+    --color-link: var(--mistica-text-link);
+}
+
+@theme inline {
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
+    --animate-loading-bar: loading-bar 1.8s ease-in-out infinite;
+    --animate-check-draw: check-draw 0.4s ease-out 0.35s forwards;
+}
+
+/* Barra enche da esquerda ate o fim; depois o inicio corre atras e reseta */
+@keyframes loading-bar {
+    0% {
+        left: 0;
+        right: 100%;
+    }
+    55% {
+        left: 0;
+        right: 0;
+    }
+    100% {
+        left: 100%;
+        right: 0;
+    }
+}
+
+/* Desenho do check no FeedbackScreen de sucesso */
+@keyframes check-draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes accordion-down {
+    from {
+        height: 0;
+    }
+    to {
+        height: var(--radix-accordion-content-height);
+    }
+}
+
+@keyframes accordion-up {
+    from {
+        height: var(--radix-accordion-content-height);
+    }
+    to {
+        height: 0;
+    }
+}
+
+/*
+ * Ajuste proprio (fora dos tokens oficiais do Mistica): no dark, os containers
+ * ficam MAIS ESCUROS que o fundo da pagina para dar destaque aos cards
+ * (nos tokens originais container #242424 ~ fundo #191919 com borda invisivel).
+ */
+.dark,
+[data-skin='vivo-new-system'].dark {
+    --mistica-background-container: #141414;
+    --mistica-background-container-alternative: #1B1B1B;
+    --mistica-border: #2E2E2E;
+}
+
+@layer base {
+    * {
+        border-color: var(--mistica-border);
+    }
+
+    body {
+        background-color: var(--mistica-background);
+        color: var(--mistica-text-primary);
+        font-family: var(--font-sans);
+        font-size: var(--mistica-text-size-text2);
+        line-height: var(--mistica-text-line-height-text2);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}

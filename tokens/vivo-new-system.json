@@ -1,0 +1,41 @@
+{
+  "extends": "vivo.json",
+  "scope": "[data-skin=\"vivo-new-system\"]",
+  "useMobileTypeOnDesktop": true,
+  "density": {
+    "height-button": 36,
+    "height-button-small": 28,
+    "height-field": 48,
+    "height-row": 48,
+    "height-tabs": 40,
+    "height-chip": 28,
+    "height-tag": 24,
+    "size-icon-button": 36,
+    "size-icon-button-small": 32,
+    "row-padding-y": 6,
+    "table-cell-padding-y": 8,
+    "menu-item-padding-y": 6
+  },
+  "spacing": {
+    "cardDefaultPadding": {
+      "value": {
+        "top": {"mobile": 12, "desktop": 12},
+        "bottom": {"mobile": 12, "desktop": 12},
+        "left": {"mobile": 12, "desktop": 12},
+        "right": {"mobile": 12, "desktop": 12}
+      },
+      "type": "spacing"
+    },
+    "buttonDefaultPadding": {
+      "value": {
+        "left": {"mobile": 12, "desktop": 12},
+        "right": {"mobile": 12, "desktop": 12}
+      },
+      "type": "spacing"
+    },
+    "responsiveLayoutMargin": {
+      "value": {"mobile": 16, "desktop": 24},
+      "type": "spacing"
+    }
+  }
+}
