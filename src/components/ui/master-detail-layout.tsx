@@ -48,9 +48,7 @@ function MasterDetailLayout({
             <div className={cn('lg:block', !isDetailOpen && 'hidden')}>
                 {onGoBack ? (
                     <div className="p-2 lg:hidden">
-                        <IconButton aria-label="Voltar para a lista" size="small" onClick={onGoBack}>
-                            <ArrowLeft />
-                        </IconButton>
+                        <IconButton Icon={ArrowLeft} aria-label="Voltar para a lista" small onPress={onGoBack} />
                     </div>
                 ) : null}
                 {children}

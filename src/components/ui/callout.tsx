@@ -8,16 +8,39 @@ import {Text} from '@/components/ui/text';
  * Callout Mistica: destaque inline com fundo backgroundAlternative,
  * radius de container, icone opcional, titulo/descricao, acoes e fechar.
  */
-type CalloutProps = React.ComponentProps<'div'> & {
+type CalloutProps = {
     title?: string;
     description: string;
-    Icon?: React.ComponentType<{className?: string}>;
-    /** Botoes/acoes renderizados abaixo da descricao. */
-    actions?: React.ReactNode;
+    /** Como no Mistica: elemento pronto (icone/ilustracao) a esquerda. */
+    asset?: React.ReactNode;
+    /** Como no Mistica: ButtonPrimary/Secondary/Link prontos. */
+    button?: React.ReactNode;
+    secondaryButton?: React.ReactNode;
+    buttonLink?: React.ReactNode;
     onClose?: () => void;
+    'aria-label'?: string;
+    className?: string;
 };
 
-function Callout({className, title, description, Icon, actions, onClose, ...props}: CalloutProps) {
+function Callout({
+    className,
+    title,
+    description,
+    asset,
+    button,
+    secondaryButton,
+    buttonLink,
+    onClose,
+    ...props
+}: CalloutProps) {
+    const acoes =
+        button || secondaryButton || buttonLink ? (
+            <>
+                {button}
+                {secondaryButton}
+                {buttonLink}
+            </>
+        ) : null;
     return (
         <div
             data-slot="callout"
@@ -28,7 +51,7 @@ function Callout({className, title, description, Icon, actions, onClose, ...prop
             )}
             {...props}
         >
-            {Icon ? <Icon className="mt-0.5 size-6 shrink-0 text-mistica-neutral-high" aria-hidden /> : null}
+            {asset ? <div className="shrink-0">{asset}</div> : null}
             <div className="grid min-w-0 flex-1 gap-1">
                 {title ? (
                     <Text as="h3" preset="text2" weight="medium">
@@ -38,7 +61,7 @@ function Callout({className, title, description, Icon, actions, onClose, ...prop
                 <Text preset="text2" color="secondary">
                     {description}
                 </Text>
-                {actions ? <div className="mt-3 flex flex-wrap gap-3">{actions}</div> : null}
+                {acoes ? <div className="mt-3 flex flex-wrap gap-3">{acoes}</div> : null}
             </div>
             {onClose ? (
                 <button

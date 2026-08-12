@@ -42,7 +42,7 @@ import {TextLink} from '@/components/ui/text-link';
 import {TimeField} from '@/components/ui/date-field';
 import {Timeline, TimelineItem} from '@/components/ui/timeline';
 import {ToggleIconButton} from '@/components/ui/toggle-icon-button';
-import {Button} from '@/components/ui/button';
+import {ButtonDanger, ButtonLink, ButtonPrimary, ButtonSecondary} from '@/components/ui/button';
 import {ButtonFixedFooterLayout} from '@/components/ui/button-fixed-footer-layout';
 import {Callout} from '@/components/ui/callout';
 import {
@@ -67,12 +67,10 @@ import {DecimalField} from '@/components/ui/decimal-field';
 import {
     Drawer,
     DrawerBody,
-    DrawerClose,
     DrawerContent,
     DrawerDescription,
     DrawerFooter,
     DrawerTitle,
-    DrawerTrigger,
 } from '@/components/ui/drawer';
 import {EmptyState} from '@/components/ui/empty-state';
 import {Hero} from '@/components/ui/hero';
@@ -91,43 +89,29 @@ import {Stepper} from '@/components/ui/stepper';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {Checkbox} from '@/components/ui/checkbox';
 import {Chip} from '@/components/ui/chip';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import {alert, confirm, DialogRoot} from '@/components/ui/dialogs';
 import {IconButton} from '@/components/ui/icon-button';
 import {Label} from '@/components/ui/label';
 import {Box, Grid, Inline, Stack} from '@/components/ui/layout';
 import {PasswordField} from '@/components/ui/password-field';
 import {ProgressBar} from '@/components/ui/progress-bar';
-import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
+import {RadioButton, RadioGroup} from '@/components/ui/radio-group';
 import {Row, RowList} from '@/components/ui/row';
 import {SearchField} from '@/components/ui/search-field';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import {Sheet, SheetContent, SheetTitle, SheetTrigger} from '@/components/ui/sheet';
+import {Select} from '@/components/ui/select';
+import {Sheet, SheetContent, SheetTitle} from '@/components/ui/sheet';
 import {Skeleton, SkeletonText} from '@/components/ui/skeleton';
 import {Slider} from '@/components/ui/slider';
-import {showSnackbar, SnackbarProvider} from '@/components/ui/snackbar';
+import {SnackbarProvider, useSnackbar} from '@/components/ui/snackbar';
 import {Spinner} from '@/components/ui/spinner';
 import {Switch} from '@/components/ui/switch';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {Tabs} from '@/components/ui/tabs';
 import {Tag} from '@/components/ui/tag';
 import {Text} from '@/components/ui/text';
 import {TextArea} from '@/components/ui/text-area';
 import {TextField} from '@/components/ui/text-field';
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip';
+import {ThemeVariant} from '@/components/ui/theme-variant';
 
 function Section({title, children}: {title: string; children: React.ReactNode}) {
     return (
@@ -155,31 +139,25 @@ function BasicosTab() {
         <div className="grid gap-6">
             <Section title="Botões">
                 <div className="flex flex-wrap items-center gap-3">
-                    <Button>Primary</Button>
-                    <Button variant="secondary">Secondary</Button>
-                    <Button variant="danger">Danger</Button>
-                    <Button variant="link">Link</Button>
-                    <Button size="small">
+                    <ButtonPrimary onPress={() => {}}>Primary</ButtonPrimary>
+                    <ButtonSecondary onPress={() => {}}>Secondary</ButtonSecondary>
+                    <ButtonDanger onPress={() => {}}>Danger</ButtonDanger>
+                    <ButtonLink onPress={() => {}}>Link</ButtonLink>
+                    <ButtonPrimary small onPress={() => {}}>
                         <ShoppingCart /> Small
-                    </Button>
-                    <Button disabled>Disabled</Button>
-                    <Button loading={loading} loadingText="Enviando..." onClick={simulateLoading}>
+                    </ButtonPrimary>
+                    <ButtonPrimary disabled onPress={() => {}}>
+                        Disabled
+                    </ButtonPrimary>
+                    <ButtonPrimary showSpinner={loading} loadingText="Enviando..." onPress={simulateLoading}>
                         Enviar pedido
-                    </Button>
+                    </ButtonPrimary>
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <IconButton aria-label="Notificações">
-                        <Bell />
-                    </IconButton>
-                    <IconButton aria-label="Presente" variant="soft">
-                        <Gift />
-                    </IconButton>
-                    <IconButton aria-label="Carrinho" variant="solid">
-                        <ShoppingCart />
-                    </IconButton>
-                    <IconButton aria-label="Wifi" variant="soft" size="small">
-                        <Wifi />
-                    </IconButton>
+                    <IconButton Icon={Bell} aria-label="Notificações" />
+                    <IconButton Icon={Gift} aria-label="Presente" backgroundType="soft" />
+                    <IconButton Icon={ShoppingCart} aria-label="Carrinho" backgroundType="solid" />
+                    <IconButton Icon={Wifi} aria-label="Wifi" backgroundType="soft" small />
                     <FavoritoDemo />
                 </div>
             </Section>
@@ -222,11 +200,11 @@ function BasicosTab() {
             <Section title="Chips">
                 <div className="flex flex-wrap gap-2">
                     {['5G', 'Fibra', 'TV', 'Streaming'].map((chip) => (
-                        <Chip key={chip} active={chips.includes(chip)} onClick={() => toggleChip(chip)}>
+                        <Chip key={chip} active={chips.includes(chip)} onPress={() => toggleChip(chip)}>
                             {chip}
                         </Chip>
                     ))}
-                    <Chip Icon={Flame} active={chips.includes('Ofertas')} onClick={() => toggleChip('Ofertas')}>
+                    <Chip Icon={Flame} active={chips.includes('Ofertas')} onPress={() => toggleChip('Ofertas')}>
                         Ofertas
                     </Chip>
                 </div>
@@ -370,17 +348,15 @@ function FormulariosTab() {
                     <TextField label="CPF" error defaultValue="123" helperText="CPF inválido" />
                     <PasswordField label="Senha" helperText="Mínimo de 8 caracteres" />
                     <SearchField label="Buscar planos" />
-                    <Select>
-                        <SelectTrigger label="Plano">
-                            <SelectValue placeholder="" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="vivo-easy">Vivo Easy</SelectItem>
-                            <SelectItem value="vivo-controle">Vivo Controle</SelectItem>
-                            <SelectItem value="vivo-pos">Vivo Pós</SelectItem>
-                            <SelectItem value="vivo-fibra">Vivo Fibra</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <Select
+                        label="Plano"
+                        options={[
+                            {value: 'vivo-easy', text: 'Vivo Easy'},
+                            {value: 'vivo-controle', text: 'Vivo Controle'},
+                            {value: 'vivo-pos', text: 'Vivo Pós'},
+                            {value: 'vivo-fibra', text: 'Vivo Fibra'},
+                        ]}
+                    />
                     <TextArea label="Mensagem" helperText="Conte pra gente o que aconteceu" />
                 </div>
             </Section>
@@ -431,15 +407,9 @@ function FormulariosTab() {
                             <Label htmlFor="news">Quero receber novidades</Label>
                         </div>
                     </div>
-                    <RadioGroup defaultValue="fibra">
-                        <div className="flex items-center gap-3">
-                            <RadioGroupItem value="fibra" id="r-fibra" />
-                            <Label htmlFor="r-fibra">Vivo Fibra</Label>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <RadioGroupItem value="movel" id="r-movel" />
-                            <Label htmlFor="r-movel">Vivo Móvel</Label>
-                        </div>
+                    <RadioGroup name="linha-form" defaultValue="fibra">
+                        <RadioButton value="fibra">Vivo Fibra</RadioButton>
+                        <RadioButton value="movel">Vivo Móvel</RadioButton>
                     </RadioGroup>
                     <div className="grid gap-3">
                         <div className="flex items-center gap-3">
@@ -467,40 +437,43 @@ function FormulariosTab() {
 }
 
 function FeedbackTab() {
+    const {openSnackbar} = useSnackbar();
     const [progress, setProgress] = React.useState(30);
     const [showCallout, setShowCallout] = React.useState(true);
+    const [sheetAberto, setSheetAberto] = React.useState(false);
 
     return (
         <div className="grid gap-6">
             <Section title="Dialog e Sheet">
                 <div className="flex flex-wrap gap-3">
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button variant="secondary">Abrir dialog</Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Cancelar assinatura?</DialogTitle>
-                                <DialogDescription>
-                                    Você perderá o acesso aos canais inclusos no plano ao final do
-                                    período já pago.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="link">Voltar</Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                    <Button variant="danger">Cancelar assinatura</Button>
-                                </DialogClose>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                    <ButtonSecondary
+                        onPress={() =>
+                            confirm({
+                                title: 'Cancelar assinatura?',
+                                message:
+                                    'Você perderá o acesso aos canais inclusos no plano ao final do período já pago.',
+                                acceptText: 'Cancelar assinatura',
+                                cancelText: 'Voltar',
+                                destructiveAction: true,
+                            })
+                        }
+                    >
+                        Abrir confirm()
+                    </ButtonSecondary>
+                    <ButtonSecondary
+                        onPress={() =>
+                            alert({
+                                title: 'Sem conexão',
+                                message: 'Verifique sua internet e tente de novo.',
+                                acceptText: 'Entendi',
+                            })
+                        }
+                    >
+                        Abrir alert()
+                    </ButtonSecondary>
 
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button variant="secondary">Abrir sheet</Button>
-                        </SheetTrigger>
+                    <ButtonSecondary onPress={() => setSheetAberto(true)}>Abrir sheet</ButtonSecondary>
+                    <Sheet open={sheetAberto} onOpenChange={setSheetAberto}>
                         <SheetContent side="bottom">
                             <SheetTitle asChild>
                                 <Text as="h2" preset="drawer-title" weight="medium" className="mb-4">
@@ -508,9 +481,9 @@ function FeedbackTab() {
                                 </Text>
                             </SheetTitle>
                             <RowList>
-                                <Row title="Vivo Easy" subtitle="10 GB + apps ilimitados" onClick={() => {}} />
-                                <Row title="Vivo Controle" subtitle="25 GB + WhatsApp grátis" onClick={() => {}} />
-                                <Row title="Vivo Pós" subtitle="50 GB para usar como quiser" onClick={() => {}} />
+                                <Row title="Vivo Easy" subtitle="10 GB + apps ilimitados" onPress={() => setSheetAberto(false)} />
+                                <Row title="Vivo Controle" subtitle="25 GB + WhatsApp grátis" onPress={() => setSheetAberto(false)} />
+                                <Row title="Vivo Pós" subtitle="50 GB para usar como quiser" onPress={() => setSheetAberto(false)} />
                             </RowList>
                         </SheetContent>
                     </Sheet>
@@ -519,25 +492,18 @@ function FeedbackTab() {
 
             <Section title="Snackbar">
                 <div className="flex flex-wrap gap-3">
-                    <Button
-                        variant="secondary"
-                        onClick={() =>
-                            showSnackbar({
-                                message: 'Plano atualizado com sucesso',
-                                buttonText: 'Desfazer',
-                            })
+                    <ButtonSecondary
+                        onPress={() =>
+                            openSnackbar({message: 'Plano atualizado com sucesso', buttonText: 'Desfazer'})
                         }
                     >
                         Snackbar informativo
-                    </Button>
-                    <Button
-                        variant="secondary"
-                        onClick={() =>
-                            showSnackbar({message: 'Não foi possível salvar', type: 'critical'})
-                        }
+                    </ButtonSecondary>
+                    <ButtonSecondary
+                        onPress={() => openSnackbar({message: 'Não foi possível salvar', type: 'CRITICAL'})}
                     >
                         Snackbar crítico
-                    </Button>
+                    </ButtonSecondary>
                 </div>
             </Section>
 
@@ -545,10 +511,11 @@ function FeedbackTab() {
                 <div className="flex flex-wrap items-center gap-6">
                     <TooltipProvider>
                         <Tooltip>
-                            <TooltipTrigger asChild>
-                                <IconButton aria-label="Mais informações" variant="soft">
-                                    <Info />
-                                </IconButton>
+                            <TooltipTrigger
+                                aria-label="Mais informações"
+                                className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-mistica-brand-low text-mistica-control-activated outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-mistica-control-activated"
+                            >
+                                <Info className="size-6" />
                             </TooltipTrigger>
                             <TooltipContent>Franquia renovada todo dia 10</TooltipContent>
                         </Tooltip>
@@ -558,13 +525,13 @@ function FeedbackTab() {
 
             {showCallout ? (
                 <Callout
-                    Icon={Info}
+                    asset={<Info className="mt-0.5 size-6 text-mistica-neutral-high" />}
                     title="Fatura digital ativada"
                     description="Sua próxima fatura chegará por e-mail. Você pode voltar para o boleto quando quiser."
-                    actions={
-                        <Button size="small" variant="secondary">
+                    button={
+                        <ButtonSecondary small onPress={() => {}}>
                             Configurar
-                        </Button>
+                        </ButtonSecondary>
                     }
                     onClose={() => setShowCallout(false)}
                 />
@@ -583,9 +550,9 @@ function FeedbackTab() {
                     <div className="grid gap-2">
                         <ProgressBar value={progress} />
                         <div className="flex items-center gap-3">
-                            <Button size="small" variant="secondary" onClick={() => setProgress((p) => Math.min(100, p + 10))}>
+                            <ButtonSecondary small onPress={() => setProgress((p) => Math.min(100, p + 10))}>
                                 +10%
-                            </Button>
+                            </ButtonSecondary>
                             <Text preset="text1" color="secondary">
                                 {progress}%
                             </Text>
@@ -620,37 +587,35 @@ function ConteudoTab() {
             <Section title="Cards">
                 <div className="grid gap-4 lg:grid-cols-2">
                     <DataCard
-                        Icon={Smartphone}
+                        icon={<Smartphone />}
                         headline={<Tag type="promo">Novidade</Tag>}
                         pretitle="Planos"
                         title="Vivo Pós 50 GB"
                         description="Ligações ilimitadas, 50 GB de internet e apps de streaming inclusos."
-                        actions={
-                            <>
-                                <Button size="small">Contratar</Button>
-                                <Button size="small" variant="link">
-                                    Saiba mais
-                                </Button>
-                            </>
+                        button={
+                            <ButtonPrimary small onPress={() => {}}>
+                                Contratar
+                            </ButtonPrimary>
                         }
+                        buttonLink={<ButtonLink onPress={() => {}}>Saiba mais</ButtonLink>}
                     />
                     <MediaCard
                         src="/placeholder.svg"
                         headline={<Tag type="success">Disponível</Tag>}
                         title="Vivo Fibra 700 Mega"
                         description="Wi-Fi 6 grátis na instalação para novos clientes."
-                        actions={
-                            <Button size="small" variant="secondary">
+                        button={
+                            <ButtonSecondary small onPress={() => {}}>
                                 Verificar cobertura
-                            </Button>
+                            </ButtonSecondary>
                         }
                     />
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
-                    <SnapCard Icon={Wifi} title="Wi-Fi" subtitle="Gerenciar rede" onPress={() => {}} />
-                    <SnapCard Icon={CreditCard} title="Fatura" subtitle="Vence dia 10" onPress={() => {}} />
-                    <SnapCard Icon={Tv} title="Vivo Play" subtitle="Canais e filmes" onPress={() => {}} />
-                    <SnapCard Icon={Rocket} title="Turbo" subtitle="Pacotes extras" onPress={() => {}} />
+                    <SnapCard icon={<Wifi />} title="Wi-Fi" subtitle="Gerenciar rede" onPress={() => {}} />
+                    <SnapCard icon={<CreditCard />} title="Fatura" subtitle="Vence dia 10" onPress={() => {}} />
+                    <SnapCard icon={<Tv />} title="Vivo Play" subtitle="Canais e filmes" onPress={() => {}} />
+                    <SnapCard icon={<Rocket />} title="Turbo" subtitle="Pacotes extras" onPress={() => {}} />
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-3">
                     <PosterCard
@@ -661,14 +626,14 @@ function ConteudoTab() {
                         onPress={() => {}}
                     />
                     <DisplayDataCard
-                        Icon={Rocket}
+                        icon={<Rocket />}
                         pretitle="Internet"
                         title="Turbine seu plano"
                         description="Pacotes extras a partir de R$ 9,90."
-                        actions={
-                            <Button size="small" variant="secondary">
+                        button={
+                            <ButtonSecondary small onPress={() => {}}>
                                 Ver pacotes
-                            </Button>
+                            </ButtonSecondary>
                         }
                         className="col-span-2"
                     />
@@ -680,13 +645,12 @@ function ConteudoTab() {
                         title="Cinema em casa"
                         description="Filmes e séries inclusos no seu plano."
                         aspectRatio="16/10"
-                        actions={
-                            <Button
-                                size="small"
-                                className="bg-mistica-button-primary-background-inverse text-mistica-text-button-primary-inverse hover:bg-mistica-button-primary-background-inverse-hover active:bg-mistica-button-primary-background-inverse-pressed"
-                            >
-                                Assistir agora
-                            </Button>
+                        button={
+                            <ThemeVariant variant="inverse">
+                                <ButtonPrimary small onPress={() => {}}>
+                                    Assistir agora
+                                </ButtonPrimary>
+                            </ThemeVariant>
                         }
                     />
                     <NakedCard
@@ -707,11 +671,7 @@ function ConteudoTab() {
                             src="/placeholder.svg"
                             title={titulo}
                             description="Apps inclusos no seu plano."
-                            actions={
-                                <Button size="small" variant="link">
-                                    Ver apps
-                                </Button>
-                            }
+                            buttonLink={<ButtonLink onPress={() => {}}>Ver apps</ButtonLink>}
                         />
                     ))}
                 </Carousel>
@@ -770,13 +730,17 @@ function ConteudoTab() {
 
             <Section title="EmptyState">
                 <EmptyState
-                    Icon={Inbox}
+                    asset={
+                        <Circle size={64}>
+                            <Inbox className="size-8" />
+                        </Circle>
+                    }
                     title="Nenhuma fatura por aqui"
                     description="Quando a próxima fatura fechar, ela aparece nesta lista."
-                    actions={
-                        <Button size="small" variant="secondary">
+                    button={
+                        <ButtonSecondary small onPress={() => {}}>
                             Ver faturas antigas
-                        </Button>
+                        </ButtonSecondary>
                     }
                 />
             </Section>
@@ -797,7 +761,7 @@ function ConteudoTab() {
                         }
                         title="Vivo Pós"
                         subtitle="(11) 99999-0000"
-                        onClick={() => {}}
+                        onPress={() => {}}
                     />
                     <RoamingRow />
                 </RowList>
@@ -812,9 +776,9 @@ function ConteudoTab() {
                     description="Descontos em cinema, música e muito mais — todo mês."
                     minHeight={320}
                     actions={
-                        <Button className="bg-mistica-button-primary-background-inverse text-mistica-text-button-primary-inverse hover:bg-mistica-button-primary-background-inverse-hover active:bg-mistica-button-primary-background-inverse-pressed">
-                            Conhecer benefícios
-                        </Button>
+                        <ThemeVariant variant="inverse">
+                            <ButtonPrimary onPress={() => {}}>Conhecer benefícios</ButtonPrimary>
+                        </ThemeVariant>
                     }
                 />
             </div>
@@ -822,11 +786,15 @@ function ConteudoTab() {
             <Section title="ButtonFixedFooterLayout">
                 <div className="h-72 overflow-y-auto rounded-mistica-media-small border border-mistica-border">
                     <ButtonFixedFooterLayout
-                        button={<Button className="w-full sm:w-auto">Confirmar mudança</Button>}
+                        button={
+                            <ButtonPrimary onPress={() => {}} className="w-full sm:w-auto">
+                                Confirmar mudança
+                            </ButtonPrimary>
+                        }
                         secondaryButton={
-                            <Button variant="link" className="w-full sm:w-auto">
+                            <ButtonLink onPress={() => {}} className="w-full sm:w-auto">
                                 Cancelar
-                            </Button>
+                            </ButtonLink>
                         }
                     >
                         <div className="grid gap-3 p-4">
@@ -850,17 +818,10 @@ function ConteudoTab() {
                     title="Internet que acompanha o seu ritmo"
                     description="Até 1 Giga de velocidade com Wi-Fi 6 incluso e instalação grátis."
                     actions={
-                        <>
-                            <Button className="bg-mistica-button-primary-background-inverse text-mistica-text-button-primary-inverse hover:bg-mistica-button-primary-background-inverse-hover active:bg-mistica-button-primary-background-inverse-pressed">
-                                Contratar agora
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                className="border-mistica-button-secondary-border-inverse text-mistica-text-button-secondary-inverse hover:bg-mistica-button-secondary-background-inverse-hover"
-                            >
-                                Ver planos
-                            </Button>
-                        </>
+                        <ThemeVariant variant="inverse" className="flex flex-wrap gap-3">
+                            <ButtonPrimary onPress={() => {}}>Contratar agora</ButtonPrimary>
+                            <ButtonSecondary onPress={() => {}}>Ver planos</ButtonSecondary>
+                        </ThemeVariant>
                     }
                     media={<img src="/placeholder.svg" alt="" className="w-full rounded-mistica-media-small object-cover" style={{aspectRatio: '4/3'}} />}
                 />
@@ -913,7 +874,11 @@ function ConteudoTab() {
                     <MainSectionHeader
                         title="Faturas em aberto"
                         description="2 faturas aguardando pagamento"
-                        action={<Button size="small">Pagar todas</Button>}
+                        action={
+                            <ButtonPrimary small onPress={() => {}}>
+                                Pagar todas
+                            </ButtonPrimary>
+                        }
                     />
                 </div>
             </Section>
@@ -949,9 +914,9 @@ function LoadingBarDemo() {
                 <LoadingBar fixed={false} visible />
             </div>
             <div className="flex items-center gap-3">
-                <Button size="small" variant="secondary" onClick={() => setLoading((v) => !v)}>
+                <ButtonSecondary small onPress={() => setLoading((v) => !v)}>
                     {loading ? 'Parar barra fixa no topo' : 'Mostrar barra fixa no topo'}
-                </Button>
+                </ButtonSecondary>
             </div>
             <LoadingBar visible={loading} />
         </div>
@@ -987,9 +952,9 @@ function FavoritoDemo() {
     return (
         <ToggleIconButton
             checked={favorito}
-            onCheckedChange={setFavorito}
-            Icon={Heart}
-            aria-label="Favoritar"
+            onChange={setFavorito}
+            checkedProps={{Icon: Heart, type: 'brand', backgroundType: 'soft', 'aria-label': 'Desfavoritar'}}
+            uncheckedProps={{Icon: Heart, 'aria-label': 'Favoritar'}}
         />
     );
 }
@@ -1096,7 +1061,7 @@ function MasterDetailDemo() {
                                 key={l.id}
                                 title={l.nome}
                                 subtitle={l.detalhe}
-                                onClick={() => setSelecionada(l.id)}
+                                onPress={() => setSelecionada(l.id)}
                                 className={selecionada === l.id ? 'bg-mistica-background-selected' : undefined}
                             />
                         ))}
@@ -1110,10 +1075,10 @@ function MasterDetailDemo() {
                     </Text>
                     {linha ? (
                         <div className="flex gap-3">
-                            <Button size="small">Gerenciar</Button>
-                            <Button size="small" variant="link">
-                                Ver fatura
-                            </Button>
+                            <ButtonPrimary small onPress={() => {}}>
+                                Gerenciar
+                            </ButtonPrimary>
+                            <ButtonLink onPress={() => {}}>Ver fatura</ButtonLink>
                         </div>
                     ) : null}
                 </div>
@@ -1133,7 +1098,7 @@ function FilterRows() {
                 <Row
                     key={name}
                     title={name}
-                    toggle={{checked: filters[name] ?? false, onCheckedChange: toggleFilter(name)}}
+                    switch={{value: filters[name] ?? false, onChange: toggleFilter(name)}}
                 />
             ))}
         </RowList>
@@ -1142,7 +1107,7 @@ function FilterRows() {
 
 function RoamingRow() {
     const [roaming, setRoaming] = React.useState(true);
-    return <Row title="Roaming internacional" toggle={{checked: roaming, onCheckedChange: setRoaming}} />;
+    return <Row title="Roaming internacional" switch={{value: roaming, onChange: setRoaming}} />;
 }
 
 function StepperDemo() {
@@ -1152,21 +1117,16 @@ function StepperDemo() {
         <div className="grid gap-6">
             <Stepper steps={steps} currentIndex={step} />
             <div className="flex gap-3">
-                <Button
-                    size="small"
-                    variant="secondary"
-                    disabled={step === 0}
-                    onClick={() => setStep((s) => Math.max(0, s - 1))}
-                >
+                <ButtonSecondary small disabled={step === 0} onPress={() => setStep((s) => Math.max(0, s - 1))}>
                     Voltar
-                </Button>
-                <Button
-                    size="small"
+                </ButtonSecondary>
+                <ButtonPrimary
+                    small
                     disabled={step === steps.length}
-                    onClick={() => setStep((s) => Math.min(steps.length, s + 1))}
+                    onPress={() => setStep((s) => Math.min(steps.length, s + 1))}
                 >
                     Avançar
-                </Button>
+                </ButtonPrimary>
             </div>
         </div>
     );
@@ -1182,7 +1142,7 @@ function FeedbackScreenDemo() {
                         type="success"
                         title="Tudo certo!"
                         description="Seu novo plano já está ativo. A cobrança aparece na próxima fatura."
-                        primaryAction={{text: 'Continuar'}}
+                        primaryButton={<ButtonPrimary onPress={() => {}}>Continuar</ButtonPrimary>}
                     />
                 </div>
                 <div className="overflow-hidden rounded-mistica-container border border-mistica-border">
@@ -1190,15 +1150,15 @@ function FeedbackScreenDemo() {
                         type="error"
                         title="Algo deu errado"
                         description="Não conseguimos processar o pagamento. Tente novamente."
-                        primaryAction={{text: 'Tentar de novo'}}
-                        secondaryAction={{text: 'Voltar'}}
+                        primaryButton={<ButtonPrimary onPress={() => {}}>Tentar de novo</ButtonPrimary>}
+                        secondaryButton={<ButtonSecondary onPress={() => {}}>Voltar</ButtonSecondary>}
                     />
                 </div>
             </div>
             <div>
-                <Button size="small" variant="secondary" onClick={() => setPlayKey((k) => k + 1)}>
+                <ButtonSecondary small onPress={() => setPlayKey((k) => k + 1)}>
                     Reproduzir animação dos ícones
-                </Button>
+                </ButtonSecondary>
             </div>
         </div>
     );
@@ -1218,6 +1178,7 @@ function CounterDemo() {
 
 function NavegacaoTab() {
     const [section, setSection] = React.useState(0);
+    const [drawerAberto, setDrawerAberto] = React.useState(false);
 
     return (
         <div className="grid gap-6">
@@ -1241,12 +1202,11 @@ function NavegacaoTab() {
                         actions={
                             <>
                                 <IconButton
+                                    Icon={Bell}
                                     aria-label="Notificações"
-                                    size="small"
+                                    small
                                     className="text-current hover:bg-white/15 active:bg-white/25 focus-visible:ring-current"
-                                >
-                                    <Bell />
-                                </IconButton>
+                                />
                                 <Avatar initials="AB" size={32} />
                             </>
                         }
@@ -1261,14 +1221,11 @@ function NavegacaoTab() {
                         onBack={() => {}}
                         actions={
                             <Menu>
-                                <MenuTrigger asChild>
-                                    <IconButton
-                                        aria-label="Mais opções"
-                                        size="small"
-                                        className="text-current hover:bg-white/15 active:bg-white/25 focus-visible:ring-current"
-                                    >
-                                        <MoreVertical />
-                                    </IconButton>
+                                <MenuTrigger
+                                    aria-label="Mais opções"
+                                    className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full text-current outline-none hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-current"
+                                >
+                                    <MoreVertical className="size-5" />
                                 </MenuTrigger>
                                 <MenuContent align="end">
                                     <MenuItem Icon={User}>Minha conta</MenuItem>
@@ -1299,10 +1256,8 @@ function NavegacaoTab() {
             </Section>
 
             <Section title="Drawer">
-                <Drawer>
-                    <DrawerTrigger asChild>
-                        <Button variant="secondary">Abrir drawer</Button>
-                    </DrawerTrigger>
+                <ButtonSecondary onPress={() => setDrawerAberto(true)}>Abrir drawer</ButtonSecondary>
+                <Drawer open={drawerAberto} onOpenChange={setDrawerAberto}>
                     <DrawerContent>
                         <DrawerTitle>Filtrar planos</DrawerTitle>
                         <DrawerDescription>
@@ -1312,12 +1267,8 @@ function NavegacaoTab() {
                             <FilterRows />
                         </DrawerBody>
                         <DrawerFooter>
-                            <DrawerClose asChild>
-                                <Button variant="link">Limpar</Button>
-                            </DrawerClose>
-                            <DrawerClose asChild>
-                                <Button>Aplicar filtros</Button>
-                            </DrawerClose>
+                            <ButtonLink onPress={() => setDrawerAberto(false)}>Limpar</ButtonLink>
+                            <ButtonPrimary onPress={() => setDrawerAberto(false)}>Aplicar filtros</ButtonPrimary>
                         </DrawerFooter>
                     </DrawerContent>
                 </Drawer>
@@ -1332,6 +1283,7 @@ export default function App() {
     const [dark, setDark] = React.useState(false);
     const [compact, setCompact] = React.useState(false);
     const [view, setView] = React.useState<'showcase' | 'exemplos'>('showcase');
+    const [abaAtiva, setAbaAtiva] = React.useState(0);
 
     React.useEffect(() => {
         document.documentElement.classList.toggle('dark', dark);
@@ -1371,66 +1323,44 @@ export default function App() {
                             Tokens do Mistica (skin new-vivo) + comportamento shadcn/ui
                         </Text>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="secondary"
-                            size="small"
-                            onClick={() => setView('exemplos')}
-                            className="border-mistica-button-secondary-border-inverse text-mistica-text-button-secondary-inverse hover:bg-mistica-button-secondary-background-inverse-hover"
-                        >
+                    <ThemeVariant variant="inverse" className="flex items-center gap-2">
+                        <ButtonSecondary small onPress={() => setView('exemplos')}>
                             Exemplos
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            size="small"
-                            aria-pressed={compact}
-                            onClick={() => setCompact((c) => !c)}
-                            className="border-mistica-button-secondary-border-inverse text-mistica-text-button-secondary-inverse hover:bg-mistica-button-secondary-background-inverse-hover"
-                        >
+                        </ButtonSecondary>
+                        <ButtonSecondary small onPress={() => setCompact((c) => !c)}>
                             {compact ? 'Skin: new-system' : 'Skin: vivo'}
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            size="small"
+                        </ButtonSecondary>
+                        <ButtonSecondary
+                            small
                             aria-label={dark ? 'Modo claro' : 'Modo escuro'}
-                            onClick={() => setDark((d) => !d)}
-                            className="border-mistica-button-secondary-border-inverse text-mistica-text-button-secondary-inverse hover:bg-mistica-button-secondary-background-inverse-hover"
+                            onPress={() => setDark((d) => !d)}
                         >
                             {dark ? <Sun /> : <Moon />}
                             {dark ? 'Claro' : 'Escuro'}
-                        </Button>
-                    </div>
+                        </ButtonSecondary>
+                    </ThemeVariant>
                 </div>
             </header>
 
             <main className="mx-auto max-w-4xl px-4 py-6 lg:px-0">
-                <Tabs defaultValue="basicos">
-                    <TabsList>
-                        <TabsTrigger value="basicos">Básicos</TabsTrigger>
-                        <TabsTrigger value="formularios">Formulários</TabsTrigger>
-                        <TabsTrigger value="feedback">Feedback</TabsTrigger>
-                        <TabsTrigger value="conteudo">Conteúdo</TabsTrigger>
-                        <TabsTrigger value="navegacao">Navegação</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="basicos">
-                        <BasicosTab />
-                    </TabsContent>
-                    <TabsContent value="formularios">
-                        <FormulariosTab />
-                    </TabsContent>
-                    <TabsContent value="feedback">
-                        <FeedbackTab />
-                    </TabsContent>
-                    <TabsContent value="conteudo">
-                        <ConteudoTab />
-                    </TabsContent>
-                    <TabsContent value="navegacao">
-                        <NavegacaoTab />
-                    </TabsContent>
-                </Tabs>
+                <Tabs
+                    tabs={[
+                        {text: 'Básicos'},
+                        {text: 'Formulários'},
+                        {text: 'Feedback'},
+                        {text: 'Conteúdo'},
+                        {text: 'Navegação'},
+                    ]}
+                    selectedIndex={abaAtiva}
+                    onChange={setAbaAtiva}
+                    renderPanel={(index) =>
+                        [<BasicosTab key="b" />, <FormulariosTab key="f" />, <FeedbackTab key="fb" />, <ConteudoTab key="c" />, <NavegacaoTab key="n" />][index]
+                    }
+                />
             </main>
 
             <SnackbarProvider />
+            <DialogRoot />
         </div>
     );
 }

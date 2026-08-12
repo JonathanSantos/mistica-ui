@@ -11,11 +11,26 @@ type DateFieldProps = Omit<React.ComponentProps<'input'>, 'placeholder' | 'type'
     label: string;
     helperText?: string;
     error?: boolean;
+    /** Como no Mistica: recebe o valor direto. */
+    onChangeValue?: (value: string) => void;
+    optional?: boolean;
     /** Tipo de data/hora nativo. */
     type?: 'date' | 'datetime-local' | 'month' | 'time';
 };
 
-function DateField({className, label, helperText, error, id, disabled, type = 'date', ...props}: DateFieldProps) {
+function DateField({
+    className,
+    label,
+    helperText,
+    error,
+    onChange,
+    onChangeValue,
+    optional,
+    id,
+    disabled,
+    type = 'date',
+    ...props
+}: DateFieldProps) {
     const autoId = React.useId();
     const inputId = id ?? autoId;
     const helperId = `${inputId}-helper`;
@@ -27,6 +42,10 @@ function DateField({className, label, helperText, error, id, disabled, type = 'd
                     id={inputId}
                     type={type}
                     disabled={disabled}
+                    onChange={(event) => {
+                        onChange?.(event);
+                        onChangeValue?.(event.target.value);
+                    }}
                     aria-invalid={error || undefined}
                     aria-describedby={helperText ? helperId : undefined}
                     className={cn(
@@ -45,7 +64,7 @@ function DateField({className, label, helperText, error, id, disabled, type = 'd
                         error ? 'text-mistica-control-error' : 'text-mistica-text-secondary'
                     )}
                 >
-                    {label}
+                    {optional ? `${label} (opcional)` : label}
                 </label>
             </div>
             {helperText ? (

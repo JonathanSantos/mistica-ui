@@ -9,15 +9,16 @@ import {cn} from '@/lib/utils';
  * animacao ao avancar/voltar. Labels com o preset stepperStepLabel.
  */
 type StepperProps = {
-    steps: Array<string>;
+    steps: ReadonlyArray<string>;
     /** Indice do passo atual (0-based). */
     currentIndex: number;
+    'aria-label'?: string;
     className?: string;
 };
 
-function Stepper({steps, currentIndex, className}: StepperProps) {
+function Stepper({steps, currentIndex, className, ...aria}: StepperProps) {
     return (
-        <ol data-slot="stepper" className={cn('flex w-full items-start', className)}>
+        <ol data-slot="stepper" className={cn('flex w-full items-start', className)} {...aria}>
             {steps.map((step, index) => {
                 const completed = index < currentIndex;
                 const current = index === currentIndex;

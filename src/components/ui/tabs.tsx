@@ -6,8 +6,10 @@ import {cn} from '@/lib/utils';
 /**
  * Tabs Mistica: labels com o preset tabsLabel (18px medium), item ativo
  * com texto textActivated e indicador controlActivated de 2px.
+ * API do Mistica original: {tabs, selectedIndex, onChange, renderPanel}.
+ * A composicao Radix continua como TabsRoot/TabsList/TabsTrigger/TabsContent.
  */
-const Tabs = TabsPrimitive.Root;
+const TabsRoot = TabsPrimitive.Root;
 
 function TabsList({className, ...props}: React.ComponentProps<typeof TabsPrimitive.List>) {
     return (
@@ -37,14 +39,34 @@ function TabsTrigger({className, ...props}: React.ComponentProps<typeof TabsPrim
     );
 }
 
-function TabsContent({className, ...props}: React.ComponentProps<typeof TabsPrimitive.Content>) {
+/** API identica as Tabs do Mistica original (indice controlado). */
+type TabsProps = {
+    tabs: ReadonlyArray<{text: string; icon?: React.ReactNode}>;
+    selectedIndex: number;
+    onChange: (selectedIndex: number) => void;
+    /** Painel renderizado abaixo conforme a aba ativa. */
+    renderPanel?: (selectedIndex: number) => React.ReactNode;
+    className?: string;
+};
+
+function Tabs({tabs, selectedIndex, onChange, renderPanel, className}: TabsProps) {
     return (
-        <TabsPrimitive.Content
-            data-slot="tabs-content"
-            className={cn('mt-6 outline-none', className)}
-            {...props}
-        />
+        <TabsRoot
+            value={String(selectedIndex)}
+            onValueChange={(value) => onChange(Number(value))}
+            className={className}
+        >
+            <TabsList>
+                {tabs.map((tab, index) => (
+                    <TabsTrigger key={tab.text} value={String(index)}>
+                        {tab.icon}
+                        {tab.text}
+                    </TabsTrigger>
+                ))}
+            </TabsList>
+            {renderPanel ? <div className="mt-6">{renderPanel(selectedIndex)}</div> : null}
+        </TabsRoot>
     );
 }
 
-export {Tabs, TabsList, TabsTrigger, TabsContent};
+export {Tabs};

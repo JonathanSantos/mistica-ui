@@ -18,7 +18,7 @@ import {
     Text2,
     Text3,
     TextField,
-} from '@telefonica/mistica';
+} from '@/examples/lib/mistica';
 
 import {
     contratarPlanoMock,
@@ -33,8 +33,12 @@ import {
 
 const PASSOS = ['Plano', 'Dados', 'Pagamento'];
 
-/** Fluxo de contratacao de plano (wizard) com o Mistica ORIGINAL. */
-export function ContratarOriginal() {
+/**
+ * Este fluxo e UMA pagina so: o import abaixo aponta para o alternador,
+ * e o seletor do lab decide em runtime qual lib o atende — o nosso
+ * mistica-ui ou o @telefonica/mistica original. Mesmo codigo, dois DS.
+ */
+export function Contratar() {
     const [passo, setPasso] = React.useState(0);
     const [plano, setPlano] = React.useState(PLANOS[1].id);
     const [nome, setNome] = React.useState('');

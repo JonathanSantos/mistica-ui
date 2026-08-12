@@ -39,6 +39,7 @@ const buttonVariants = cva(
     }
 );
 
+/** Interno: implementacao compartilhada. A API publica sao os botoes nomeados. */
 function Button({
     className,
     variant,
@@ -79,5 +80,79 @@ function Button({
     );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export {Button, buttonVariants};
+/**
+ * API identica ao Mistica original: ButtonPrimary/Secondary/Danger/Link/
+ * ButtonLinkDanger com onPress, small, showSpinner, loadingText, submit e href.
+ * Quem migra do @telefonica/mistica nao muda o codigo.
+ */
+type MisticaButtonProps = {
+    children: React.ReactNode;
+    onPress?: (event: React.MouseEvent<HTMLElement>) => void | Promise<void>;
+    small?: boolean;
+    showSpinner?: boolean;
+    loadingText?: string;
+    disabled?: boolean;
+    /** true: botao de submit do form. */
+    submit?: boolean;
+    href?: string;
+    newTab?: boolean;
+    'aria-label'?: string;
+    className?: string;
+};
+
+function criarBotaoMistica(variant: 'primary' | 'secondary' | 'danger' | 'link', extraClassName?: string) {
+    return function BotaoMistica({
+        children,
+        onPress,
+        small,
+        showSpinner,
+        loadingText,
+        disabled,
+        submit,
+        href,
+        newTab,
+        className,
+        ...aria
+    }: MisticaButtonProps) {
+        const shared = {
+            variant,
+            size: (small ? 'small' : 'default') as 'small' | 'default',
+            loading: showSpinner,
+            loadingText,
+            disabled,
+            className: cn(extraClassName, className),
+            ...aria,
+        };
+
+        if (href) {
+            return (
+                <Button asChild {...shared}>
+                    <a
+                        href={href}
+                        target={newTab ? '_blank' : undefined}
+                        rel={newTab ? 'noopener noreferrer' : undefined}
+                        onClick={onPress}
+                    >
+                        {children}
+                    </a>
+                </Button>
+            );
+        }
+        return (
+            <Button type={submit ? 'submit' : 'button'} onClick={onPress} {...shared}>
+                {children}
+            </Button>
+        );
+    };
+}
+
+const ButtonPrimary = criarBotaoMistica('primary');
+const ButtonSecondary = criarBotaoMistica('secondary');
+const ButtonDanger = criarBotaoMistica('danger');
+const ButtonLink = criarBotaoMistica('link');
+const ButtonLinkDanger = criarBotaoMistica(
+    'link',
+    'text-mistica-text-link-danger active:bg-mistica-button-link-danger-background-pressed'
+);
+
+export {ButtonPrimary, ButtonSecondary, ButtonDanger, ButtonLink, ButtonLinkDanger};

@@ -4,7 +4,7 @@ import {Search, X} from 'lucide-react';
 import {TextField} from '@/components/ui/text-field';
 
 /** SearchField Mistica: TextField com botao de limpar quando ha valor. */
-type SearchFieldProps = Omit<React.ComponentProps<typeof TextField>, 'type' | 'endAdornment'> & {
+type SearchFieldProps = Omit<React.ComponentProps<typeof TextField>, 'type' | 'endIcon'> & {
     onClear?: () => void;
 };
 
@@ -45,7 +45,7 @@ function SearchField({value, defaultValue, onChange, onClear, ...props}: SearchF
                 onChange?.(event);
             }}
             className="[&_input::-webkit-search-cancel-button]:hidden"
-            endAdornment={
+            endIcon={
                 currentValue ? (
                     <button
                         type="button"

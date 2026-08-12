@@ -103,7 +103,7 @@ function Autocomplete({
                 }}
                 onFocus={() => setAberto(true)}
                 onKeyDown={aoTeclar}
-                endAdornment={
+                endIcon={
                     <div className="pointer-events-none p-2 text-mistica-chevron-indicator">
                         <ChevronDown className={cn('size-5 transition-transform duration-150', aberto && 'rotate-180')} />
                     </div>

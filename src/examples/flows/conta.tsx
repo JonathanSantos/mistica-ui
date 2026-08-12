@@ -10,10 +10,14 @@ import {
     Text4,
     Title1,
     useSnackbar,
-} from '@telefonica/mistica';
+} from '@/examples/lib/mistica';
 
-/** Tela "Minha conta" com o Mistica ORIGINAL. */
-export function ContaOriginal() {
+/**
+ * Este fluxo e UMA pagina so: o import abaixo aponta para o alternador,
+ * e o seletor do lab decide em runtime qual lib o atende — o nosso
+ * mistica-ui ou o @telefonica/mistica original. Mesmo codigo, dois DS.
+ */
+export function Conta() {
     const {openSnackbar} = useSnackbar();
     const [prefs, setPrefs] = React.useState({roaming: true, cincoG: true, faturaDigital: false});
     const [assinaturaAtiva, setAssinaturaAtiva] = React.useState(true);

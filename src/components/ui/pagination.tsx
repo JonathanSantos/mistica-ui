@@ -49,13 +49,12 @@ function Pagination({page, totalPages, onPageChange, 'aria-label': ariaLabel = '
             <ul className="flex items-center gap-1">
                 <li>
                     <IconButton
+                        Icon={ChevronLeft}
                         aria-label="Página anterior"
-                        size="small"
+                        small
                         disabled={page <= 1}
-                        onClick={() => onPageChange(page - 1)}
-                    >
-                        <ChevronLeft />
-                    </IconButton>
+                        onPress={() => onPageChange(page - 1)}
+                    />
                 </li>
                 {paginasVisiveis(page, totalPages).map((item, index) =>
                     item === 'ellipsis' ? (
@@ -83,13 +82,12 @@ function Pagination({page, totalPages, onPageChange, 'aria-label': ariaLabel = '
                 )}
                 <li>
                     <IconButton
+                        Icon={ChevronRight}
                         aria-label="Próxima página"
-                        size="small"
+                        small
                         disabled={page >= totalPages}
-                        onClick={() => onPageChange(page + 1)}
-                    >
-                        <ChevronRight />
-                    </IconButton>
+                        onPress={() => onPageChange(page + 1)}
+                    />
                 </li>
             </ul>
         </nav>

@@ -25,7 +25,7 @@ function formatExpiration(raw: string): string {
     return `${digits.slice(0, 2)}/${digits.slice(2)}`;
 }
 
-type FieldProps = Omit<React.ComponentProps<typeof TextField>, 'type' | 'endAdornment'>;
+type FieldProps = Omit<React.ComponentProps<typeof TextField>, 'type' | 'endIcon'>;
 
 function CreditCardNumberField({onChange, ...props}: FieldProps) {
     return (
@@ -34,7 +34,7 @@ function CreditCardNumberField({onChange, ...props}: FieldProps) {
             inputMode="numeric"
             autoComplete="cc-number"
             maxLength={23}
-            endAdornment={
+            endIcon={
                 <div className="p-2 text-mistica-neutral-medium">
                     <CreditCard className="size-5" aria-hidden />
                 </div>
@@ -48,7 +48,15 @@ function CreditCardNumberField({onChange, ...props}: FieldProps) {
     );
 }
 
-function CreditCardExpirationField({onChange, ...props}: FieldProps) {
+/** Valor da validade como no Mistica original. */
+type ExpirationDateValue = {raw: string; month: number | null; year: number | null};
+
+type ExpirationFieldProps = Omit<FieldProps, 'onChangeValue'> & {
+    /** Como no Mistica: entrega {raw, month, year}. */
+    onChangeValue?: (value: ExpirationDateValue) => void;
+};
+
+function CreditCardExpirationField({onChange, onChangeValue, ...props}: ExpirationFieldProps) {
     return (
         <TextField
             type="text"
@@ -56,8 +64,15 @@ function CreditCardExpirationField({onChange, ...props}: FieldProps) {
             autoComplete="cc-exp"
             maxLength={5}
             onChange={(event) => {
-                event.target.value = formatExpiration(event.target.value);
+                const raw = formatExpiration(event.target.value);
+                event.target.value = raw;
                 onChange?.(event);
+                const m = /^(\d{2})\/(\d{2})$/.exec(raw);
+                onChangeValue?.({
+                    raw,
+                    month: m ? Number(m[1]) : null,
+                    year: m ? 2000 + Number(m[2]) : null,
+                });
             }}
             {...props}
         />
@@ -93,12 +108,17 @@ function CreditCardFields({className}: {className?: string}) {
     );
 }
 
+/** Nome identico ao do Mistica original. */
+const CvvField = CreditCardCvvField;
+
 // eslint-disable-next-line react-refresh/only-export-components
 export {
     CreditCardFields,
     CreditCardNumberField,
     CreditCardExpirationField,
     CreditCardCvvField,
+    CvvField,
     formatCardNumber,
     formatExpiration,
+    type ExpirationDateValue,
 };

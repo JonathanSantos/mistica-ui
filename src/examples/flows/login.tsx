@@ -8,12 +8,16 @@ import {
     Stack,
     Text5,
     useSnackbar,
-} from '@telefonica/mistica';
+} from '@/examples/lib/mistica';
 
 import {autenticarMock, validarEmail, validarSenha} from '@/examples/lib/validation';
 
-/** Fluxo de login com o Mistica ORIGINAL (@telefonica/mistica). */
-export function LoginOriginal() {
+/**
+ * Este fluxo e UMA pagina so: o import abaixo aponta para o alternador,
+ * e o seletor do lab decide em runtime qual lib o atende — o nosso
+ * mistica-ui ou o @telefonica/mistica original. Mesmo codigo, dois DS.
+ */
+export function Login() {
     const {openSnackbar} = useSnackbar();
     const [email, setEmail] = React.useState('');
     const [senha, setSenha] = React.useState('');

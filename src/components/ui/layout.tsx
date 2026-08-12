@@ -69,31 +69,44 @@ function Stack({as: Comp = 'div', space = 16, align = 'stretch', className, styl
     );
 }
 
-/** Inline: linha horizontal com espaco entre filhos; quebra por padrao. */
+/**
+ * Inline: linha horizontal com espaco entre filhos; quebra por padrao.
+ * Como no Mistica: space aceita numero ou 'between'/'around'/'evenly',
+ * e fullWidth estica os filhos igualmente.
+ */
 type InlineProps = AsProp & {
-    space?: number;
+    space?: number | 'between' | 'around' | 'evenly';
     alignItems?: 'start' | 'center' | 'end' | 'stretch';
-    justify?: 'start' | 'center' | 'end' | 'between';
+    fullWidth?: boolean;
     wrap?: boolean;
 } & Omit<React.HTMLAttributes<HTMLElement>, 'className' | 'children'>;
 
-const JUSTIFY = {start: 'justify-start', center: 'justify-center', end: 'justify-end', between: 'justify-between'};
+const SPACE_JUSTIFY = {between: 'justify-between', around: 'justify-around', evenly: 'justify-evenly'};
 
 function Inline({
     as: Comp = 'div',
     space = 8,
     alignItems = 'center',
-    justify = 'start',
+    fullWidth = false,
     wrap = true,
     className,
     style,
     ...props
 }: InlineProps & {style?: React.CSSProperties}) {
+    const distribuido = typeof space === 'string';
     return (
         <Comp
             data-slot="inline"
-            className={cn('flex flex-row', ALIGN_ITEMS[alignItems], JUSTIFY[justify], wrap && 'flex-wrap', className)}
-            style={{gap: space, ...style}}
+            className={cn(
+                'flex flex-row',
+                ALIGN_ITEMS[alignItems],
+                distribuido && 'w-full',
+                distribuido && SPACE_JUSTIFY[space],
+                fullWidth && 'w-full [&>*]:min-w-0 [&>*]:flex-1',
+                wrap && 'flex-wrap',
+                className
+            )}
+            style={{...(typeof space === 'number' && {gap: space}), ...style}}
             {...props}
         />
     );

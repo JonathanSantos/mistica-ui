@@ -8,33 +8,35 @@ import {Text} from '@/components/ui/text';
  * centrado (tela) ou dentro de um card.
  */
 type EmptyStateProps = {
-    Icon?: React.ComponentType<{className?: string}>;
-    /** Imagem alternativa ao icone. */
-    imageSrc?: string;
+    /** Como no Mistica: elemento pronto (icone/ilustracao). */
+    asset?: React.ReactNode;
+    imageUrl?: string;
     title: string;
     description?: string;
-    actions?: React.ReactNode;
-    /** true: renderiza dentro de um container boxed. */
-    boxed?: boolean;
+    /** Como no Mistica: ButtonPrimary/Secondary/Link prontos. */
+    button?: React.ReactNode;
+    buttonLink?: React.ReactNode;
     className?: string;
 };
 
-function EmptyState({Icon, imageSrc, title, description, actions, boxed, className}: EmptyStateProps) {
+function EmptyState({asset, imageUrl, title, description, button, buttonLink, className}: EmptyStateProps) {
+    const imagem = imageUrl;
+    const acoes =
+        button || buttonLink ? (
+            <>
+                {button}
+                {buttonLink}
+            </>
+        ) : null;
     return (
         <div
             data-slot="empty-state"
-            className={cn(
-                'flex flex-col items-center gap-4 px-6 py-10 text-center',
-                boxed && 'rounded-mistica-container border border-mistica-border bg-mistica-background-container',
-                className
-            )}
+            className={cn('flex flex-col items-center gap-4 px-6 py-10 text-center', className)}
         >
-            {imageSrc ? (
-                <img src={imageSrc} alt="" className="size-28 rounded-mistica-media-small object-cover" />
-            ) : Icon ? (
-                <div className="flex size-16 items-center justify-center rounded-full bg-mistica-brand-low">
-                    <Icon className="size-8 text-mistica-control-activated" aria-hidden />
-                </div>
+            {asset ? (
+                asset
+            ) : imagem ? (
+                <img src={imagem} alt="" className="size-28 rounded-mistica-media-small object-cover" />
             ) : null}
             <div className="grid max-w-md gap-2">
                 <Text as="h2" preset="title3">
@@ -46,14 +48,18 @@ function EmptyState({Icon, imageSrc, title, description, actions, boxed, classNa
                     </Text>
                 ) : null}
             </div>
-            {actions ? <div className="mt-2 flex flex-wrap justify-center gap-3">{actions}</div> : null}
+            {acoes ? <div className="mt-2 flex flex-wrap justify-center gap-3">{acoes}</div> : null}
         </div>
     );
 }
 
 /** EmptyStateCard Mistica: EmptyState dentro de um container boxed. */
-function EmptyStateCard(props: Omit<React.ComponentProps<typeof EmptyState>, 'boxed'>) {
-    return <EmptyState boxed {...props} />;
+function EmptyStateCard(props: EmptyStateProps) {
+    return (
+        <div className="overflow-hidden rounded-mistica-container border border-mistica-border bg-mistica-background-container">
+            <EmptyState {...props} />
+        </div>
+    );
 }
 
 export {EmptyState, EmptyStateCard};

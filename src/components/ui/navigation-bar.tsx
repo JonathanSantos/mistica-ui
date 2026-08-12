@@ -35,13 +35,12 @@ function NavigationBar({title, onBack, actions, withoutDivider, className}: Navi
         >
             {onBack ? (
                 <IconButton
+                    Icon={ArrowLeft}
                     aria-label="Voltar"
-                    size="small"
-                    onClick={onBack}
+                    small
+                    onPress={onBack}
                     className="text-current hover:bg-white/15 active:bg-white/25 focus-visible:ring-current"
-                >
-                    <ArrowLeft />
-                </IconButton>
+                />
             ) : null}
             {title ? (
                 <Text

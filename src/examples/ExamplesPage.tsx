@@ -6,15 +6,13 @@ import '@telefonica/mistica/css/vivo.css';
 
 import {Chip} from '@/components/ui/chip';
 import {SnackbarProvider} from '@/components/ui/snackbar';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {Tabs} from '@/components/ui/tabs';
 import {Text} from '@/components/ui/text';
 import {aplicarCorNossa, aplicarCorOriginal, COR_PADRAO, skinMisticaComCor} from '@/examples/lib/color';
-import {ContaNosso} from '@/examples/flows/conta-nosso';
-import {ContaOriginal} from '@/examples/flows/conta-original';
-import {ContratarNosso} from '@/examples/flows/contratar-nosso';
-import {ContratarOriginal} from '@/examples/flows/contratar-original';
-import {LoginNosso} from '@/examples/flows/login-nosso';
-import {LoginOriginal} from '@/examples/flows/login-original';
+import {DsProvider, especificadorDoImport} from '@/examples/lib/mistica';
+import {Conta} from '@/examples/flows/conta';
+import {Contratar} from '@/examples/flows/contratar';
+import {Login} from '@/examples/flows/login';
 
 /**
  * Laboratorio de exemplos: os mesmos fluxos (com a mesma logica de validacao)
@@ -46,6 +44,7 @@ export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
     const [escuro, setEscuro] = React.useState(false);
     const [skinCompacta, setSkinCompacta] = React.useState(false);
     const [cor, setCor] = React.useState<string | null>(null);
+    const [fluxoAtivo, setFluxoAtivo] = React.useState(0);
 
     // Tema escuro do NOSSO (classe .dark); o do original vai via colorScheme
     React.useEffect(() => {
@@ -96,9 +95,9 @@ export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
     );
 
     const fluxos = [
-        {id: 'login', titulo: 'Login', nosso: <LoginNosso />, original: <LoginOriginal />},
-        {id: 'contratar', titulo: 'Contratar plano', nosso: <ContratarNosso />, original: <ContratarOriginal />},
-        {id: 'conta', titulo: 'Minha conta', nosso: <ContaNosso />, original: <ContaOriginal />},
+        {id: 'login', titulo: 'Login', elemento: <Login />},
+        {id: 'contratar', titulo: 'Contratar plano', elemento: <Contratar />},
+        {id: 'conta', titulo: 'Minha conta', elemento: <Conta />},
     ];
 
     return (
@@ -130,32 +129,32 @@ export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
                 <section className="rounded-mistica-container border border-mistica-border bg-mistica-background-container p-(--mistica-card-padding)">
                     <div className="grid gap-5 lg:grid-cols-4">
                         <ControleGrupo rotulo="Design system">
-                            <Chip active={ds === 'nosso'} onClick={() => setDs('nosso')}>
+                            <Chip active={ds === 'nosso'} onPress={() => setDs('nosso')}>
                                 Nosso
                             </Chip>
-                            <Chip active={ds === 'original'} onClick={() => setDs('original')}>
+                            <Chip active={ds === 'original'} onPress={() => setDs('original')}>
                                 Original
                             </Chip>
                         </ControleGrupo>
                         <ControleGrupo rotulo="Tema (ambos)">
-                            <Chip Icon={Sun} active={!escuro} onClick={() => setEscuro(false)}>
+                            <Chip Icon={Sun} active={!escuro} onPress={() => setEscuro(false)}>
                                 Claro
                             </Chip>
-                            <Chip Icon={Moon} active={escuro} onClick={() => setEscuro(true)}>
+                            <Chip Icon={Moon} active={escuro} onPress={() => setEscuro(true)}>
                                 Escuro
                             </Chip>
                         </ControleGrupo>
                         <ControleGrupo rotulo="Skin (só o nosso)">
                             <Chip
                                 active={!skinCompacta}
-                                onClick={() => setSkinCompacta(false)}
+                                onPress={() => setSkinCompacta(false)}
                                 disabled={ds === 'original'}
                             >
                                 vivo
                             </Chip>
                             <Chip
                                 active={skinCompacta}
-                                onClick={() => setSkinCompacta(true)}
+                                onPress={() => setSkinCompacta(true)}
                                 disabled={ds === 'original'}
                             >
                                 new-system
@@ -185,28 +184,30 @@ export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
                     </div>
                 </section>
 
-                <Tabs defaultValue="login">
-                    <TabsList>
-                        {fluxos.map((fluxo) => (
-                            <TabsTrigger key={fluxo.id} value={fluxo.id}>
-                                {fluxo.titulo}
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
-                    {fluxos.map((fluxo) => (
-                        <TabsContent key={fluxo.id} value={fluxo.id}>
-                            <div className="rounded-mistica-container border border-mistica-border bg-mistica-background-container px-4">
-                                {ds === 'nosso' ? (
-                                    fluxo.nosso
-                                ) : (
-                                    <ThemeContextProvider theme={misticaTheme}>
-                                        {fluxo.original}
-                                    </ThemeContextProvider>
-                                )}
+                <Tabs
+                    tabs={fluxos.map((fluxo) => ({text: fluxo.titulo}))}
+                    selectedIndex={fluxoAtivo}
+                    onChange={setFluxoAtivo}
+                    renderPanel={(index) => (
+                        <div className="grid gap-3">
+                            <div className="overflow-x-auto rounded-mistica-media-small bg-mistica-background-alternative px-4 py-2.5 font-mono text-xs whitespace-nowrap text-mistica-text-secondary">
+                                {'import {…} from '}
+                                <span className="font-bold text-mistica-text-activated transition-colors">
+                                    {especificadorDoImport(ds)}
+                                </span>
+                                {';'}
+                                <span className="ml-3 font-sans text-mistica-text-secondary">
+                                    ← mesmo arquivo de fluxo; o seletor troca só a lib
+                                </span>
                             </div>
-                        </TabsContent>
-                    ))}
-                </Tabs>
+                            <div className="rounded-mistica-container border border-mistica-border bg-mistica-background-container px-4">
+                                <ThemeContextProvider theme={misticaTheme}>
+                                    <DsProvider ds={ds}>{fluxos[index].elemento}</DsProvider>
+                                </ThemeContextProvider>
+                            </div>
+                        </div>
+                    )}
+                />
 
                 <Text preset="text1" color="secondary">
                     Mocks: login aceita qualquer senha com 8+ caracteres ("errada123" simula erro do

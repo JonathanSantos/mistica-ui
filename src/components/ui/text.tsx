@@ -38,7 +38,23 @@ type TextPreset =
     | 'loading-screen-title'
     | 'stepper-step-label';
 
-type TextColor = 'primary' | 'secondary' | 'link' | 'error' | 'activated' | 'brand' | 'inverse';
+type TextColor =
+    | 'primary'
+    | 'secondary'
+    | 'link'
+    | 'error'
+    | 'activated'
+    | 'brand'
+    | 'inverse'
+    // nomes de token como no Mistica original
+    | 'textPrimary'
+    | 'textSecondary'
+    | 'textLink'
+    | 'textError'
+    | 'textActivated'
+    | 'textBrand'
+    | 'textPrimaryInverse'
+    | 'textSecondaryInverse';
 
 const COLOR_CLASSES: Record<TextColor, string> = {
     primary: 'text-mistica-text-primary',
@@ -48,6 +64,14 @@ const COLOR_CLASSES: Record<TextColor, string> = {
     activated: 'text-mistica-text-activated',
     brand: 'text-mistica-text-brand',
     inverse: 'text-mistica-text-primary-inverse',
+    textPrimary: 'text-mistica-text-primary',
+    textSecondary: 'text-mistica-text-secondary',
+    textLink: 'text-mistica-text-link',
+    textError: 'text-mistica-text-error',
+    textActivated: 'text-mistica-text-activated',
+    textBrand: 'text-mistica-text-brand',
+    textPrimaryInverse: 'text-mistica-text-primary-inverse',
+    textSecondaryInverse: 'text-mistica-text-secondary-inverse',
 };
 
 const WEIGHTS = {light: '300', regular: '400', medium: '500', bold: '700'} as const;
@@ -89,4 +113,59 @@ function Text<T extends React.ElementType = 'p'>({
     );
 }
 
-export {Text, type TextPreset};
+/**
+ * Componentes nomeados como no Mistica original: Text1..Text10 e Title1..4,
+ * com pesos como props booleanas (<Text2 medium>, <Text3 regular>).
+ */
+type NamedTextProps = {
+    light?: boolean;
+    regular?: boolean;
+    medium?: boolean;
+    bold?: boolean;
+    as?: React.ElementType;
+    color?: TextColor;
+    className?: string;
+    children?: React.ReactNode;
+    id?: string;
+};
+
+function criarTextoNomeado(preset: TextPreset, asPadrao: React.ElementType = 'p') {
+    return function TextoNomeado({light, regular, medium, bold, as, ...rest}: NamedTextProps) {
+        const weight = bold ? 'bold' : medium ? 'medium' : regular ? 'regular' : light ? 'light' : undefined;
+        return <Text preset={preset} weight={weight} as={as ?? asPadrao} {...rest} />;
+    };
+}
+
+const Text1 = criarTextoNomeado('text1');
+const Text2 = criarTextoNomeado('text2');
+const Text3 = criarTextoNomeado('text3');
+const Text4 = criarTextoNomeado('text4');
+const Text5 = criarTextoNomeado('text5');
+const Text6 = criarTextoNomeado('text6');
+const Text7 = criarTextoNomeado('text7');
+const Text8 = criarTextoNomeado('text8');
+const Text9 = criarTextoNomeado('text9');
+const Text10 = criarTextoNomeado('text10');
+const Title1 = criarTextoNomeado('title1', 'h3');
+const Title2 = criarTextoNomeado('title2', 'h3');
+const Title3 = criarTextoNomeado('title3', 'h2');
+const Title4 = criarTextoNomeado('title4', 'h1');
+
+export {
+    Text,
+    Text1,
+    Text2,
+    Text3,
+    Text4,
+    Text5,
+    Text6,
+    Text7,
+    Text8,
+    Text9,
+    Text10,
+    Title1,
+    Title2,
+    Title3,
+    Title4,
+    type TextPreset,
+};

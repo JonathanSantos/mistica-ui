@@ -53,8 +53,12 @@ type TextFieldProps = Omit<React.ComponentProps<'input'>, 'placeholder'> & {
     label: string;
     helperText?: string;
     error?: boolean;
+    /** Como no Mistica: recebe o valor direto (alem do onChange com evento). */
+    onChangeValue?: (value: string) => void;
+    /** Como no Mistica: marca o campo como opcional no label. */
+    optional?: boolean;
     /** Conteudo fixo no fim do campo (icone/botao), ex: olho do PasswordField. */
-    endAdornment?: React.ReactNode;
+    endIcon?: React.ReactNode;
 };
 
 function TextField({
@@ -62,7 +66,10 @@ function TextField({
     label,
     helperText,
     error,
-    endAdornment,
+    onChange,
+    onChangeValue,
+    optional,
+    endIcon,
     id,
     disabled,
     ...props
@@ -70,6 +77,7 @@ function TextField({
     const autoId = React.useId();
     const inputId = id ?? autoId;
     const helperId = `${inputId}-helper`;
+    const rotulo = optional ? `${label} (opcional)` : label;
 
     return (
         <div
@@ -83,18 +91,23 @@ function TextField({
                     aria-invalid={error || undefined}
                     aria-describedby={helperText ? helperId : undefined}
                     placeholder=" "
+                    onChange={(event) => {
+                        onChange?.(event);
+                        // depois do onChange para receber valores ja mascarados
+                        onChangeValue?.(event.target.value);
+                    }}
                     className={cn(
                         'h-(--mistica-height-field)',
                         fieldFrameClasses(error),
-                        endAdornment && 'pr-12'
+                        endIcon && 'pr-12'
                     )}
                     {...props}
                 />
                 <label htmlFor={inputId} className={fieldLabelClasses(error)}>
-                    {label}
+                    {rotulo}
                 </label>
-                {endAdornment ? (
-                    <div className="absolute top-1/2 right-2 -translate-y-1/2">{endAdornment}</div>
+                {endIcon ? (
+                    <div className="absolute top-1/2 right-2 -translate-y-1/2">{endIcon}</div>
                 ) : null}
             </div>
             {helperText ? (
@@ -106,5 +119,10 @@ function TextField({
     );
 }
 
+/** EmailField Mistica: TextField de e-mail (teclado e autocomplete corretos). */
+function EmailField(props: Omit<TextFieldProps, 'type'>) {
+    return <TextField type="email" inputMode="email" autoComplete="email" {...props} />;
+}
+
 // eslint-disable-next-line react-refresh/only-export-components
-export {TextField, fieldFrameClasses, fieldLabelClasses, FieldHelperText};
+export {TextField, EmailField, fieldFrameClasses, fieldLabelClasses, FieldHelperText};

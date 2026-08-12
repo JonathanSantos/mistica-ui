@@ -61,23 +61,21 @@ function Carousel({children, itemsPerPage = 3, withBullets = true, className}: C
 
             {page > 0 ? (
                 <IconButton
+                    Icon={ChevronLeft}
                     aria-label="Anterior"
-                    size="small"
-                    onClick={() => scrollToPage(page - 1)}
+                    small
+                    onPress={() => scrollToPage(page - 1)}
                     className="absolute top-1/2 -left-5 hidden -translate-y-1/2 bg-mistica-background-container shadow-[0_2px_8px_rgba(0,0,0,0.2)] lg:inline-flex"
-                >
-                    <ChevronLeft />
-                </IconButton>
+                />
             ) : null}
             {page < pages - 1 ? (
                 <IconButton
+                    Icon={ChevronRight}
                     aria-label="Próximo"
-                    size="small"
-                    onClick={() => scrollToPage(page + 1)}
+                    small
+                    onPress={() => scrollToPage(page + 1)}
                     className="absolute top-1/2 -right-5 hidden -translate-y-1/2 bg-mistica-background-container shadow-[0_2px_8px_rgba(0,0,0,0.2)] lg:inline-flex"
-                >
-                    <ChevronRight />
-                </IconButton>
+                />
             ) : null}
 
             {withBullets && pages > 1 ? (

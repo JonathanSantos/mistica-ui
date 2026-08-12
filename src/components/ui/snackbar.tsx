@@ -3,35 +3,32 @@ import {toast, Toaster} from 'sonner';
 import {cn} from '@/lib/utils';
 
 /**
- * Snackbar Mistica sobre sonner: barra inferior com radius de popup,
- * fundo feedbackInfoBackground (informativo) ou feedbackErrorBackground
- * (critico) e acao com textLinkSnackbar. API imperativa como no Mistica.
+ * Snackbar Mistica sobre sonner, com a API do Mistica original:
+ * useSnackbar().openSnackbar({message, type: 'INFORMATIVE'|'CRITICAL',
+ * buttonText, duration, onClose(result)}). showSnackbar (nossa API
+ * anterior) continua funcionando.
  */
-type SnackbarType = 'informative' | 'critical';
+type SnackbarCloseResult = {action: 'BUTTON' | 'TIMEOUT' | 'DISMISS'};
 
-type ShowSnackbarOptions = {
+type OpenSnackbarParams = {
     message: string;
-    type?: SnackbarType;
+    type?: 'INFORMATIVE' | 'CRITICAL';
     buttonText?: string;
-    onButtonClick?: () => void;
-    /** ms; padrao 5000 (10000 quando ha botao, como no Mistica) */
-    duration?: number;
+    /** ms, ou 'PERSISTENT' para nao fechar sozinho. */
+    duration?: number | 'PERSISTENT';
+    onClose?: (result: SnackbarCloseResult) => void;
 };
 
-function showSnackbar({
-    message,
-    type = 'informative',
-    buttonText,
-    onButtonClick,
-    duration,
-}: ShowSnackbarOptions): void {
+function openSnackbar({message, type = 'INFORMATIVE', buttonText, duration, onClose}: OpenSnackbarParams): void {
+    let fechadoPorBotao = false;
+
     toast.custom(
         (id) => (
             <div
                 data-slot="snackbar"
                 className={cn(
                     'flex min-h-12 w-full items-center justify-between gap-4 rounded-mistica-popup px-4 py-3.5 sm:min-w-90',
-                    type === 'critical'
+                    type === 'CRITICAL'
                         ? 'bg-mistica-feedback-error-background'
                         : 'bg-mistica-feedback-info-background'
                 )}
@@ -42,8 +39,9 @@ function showSnackbar({
                         type="button"
                         className="shrink-0 cursor-pointer rounded-lg px-2 py-1 text-base font-medium text-mistica-text-link-snackbar hover:opacity-80"
                         onClick={() => {
+                            fechadoPorBotao = true;
                             toast.dismiss(id);
-                            onButtonClick?.();
+                            onClose?.({action: 'BUTTON'});
                         }}
                     >
                         {buttonText}
@@ -51,13 +49,33 @@ function showSnackbar({
                 ) : null}
             </div>
         ),
-        {duration: duration ?? (buttonText ? 10000 : 5000)}
+        {
+            duration:
+                duration === 'PERSISTENT' ? Infinity : (duration ?? (buttonText ? 10000 : 5000)),
+            onAutoClose: () => onClose?.({action: 'TIMEOUT'}),
+            onDismiss: () => {
+                if (!fechadoPorBotao) {
+                    onClose?.({action: 'DISMISS'});
+                }
+            },
+        }
     );
 }
 
+/** Hook com a mesma assinatura do Mistica original. */
+function useSnackbar(): {openSnackbar: typeof openSnackbar} {
+    return {openSnackbar};
+}
+
 function SnackbarProvider() {
-    return <Toaster position="bottom-center" gap={8} toastOptions={{unstyled: true, className: 'w-full flex justify-center'}} />;
+    return (
+        <Toaster
+            position="bottom-center"
+            gap={8}
+            toastOptions={{unstyled: true, className: 'w-full flex justify-center'}}
+        />
+    );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export {SnackbarProvider, showSnackbar};
+export {SnackbarProvider, openSnackbar, useSnackbar};

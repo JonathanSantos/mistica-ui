@@ -8,9 +8,24 @@ type TextAreaProps = Omit<React.ComponentProps<'textarea'>, 'placeholder'> & {
     label: string;
     helperText?: string;
     error?: boolean;
+    /** Como no Mistica: recebe o valor direto. */
+    onChangeValue?: (value: string) => void;
+    optional?: boolean;
 };
 
-function TextArea({className, label, helperText, error, id, disabled, rows = 4, ...props}: TextAreaProps) {
+function TextArea({
+    className,
+    label,
+    helperText,
+    error,
+    onChange,
+    onChangeValue,
+    optional,
+    id,
+    disabled,
+    rows = 4,
+    ...props
+}: TextAreaProps) {
     const autoId = React.useId();
     const inputId = id ?? autoId;
     const helperId = `${inputId}-helper`;
@@ -25,6 +40,10 @@ function TextArea({className, label, helperText, error, id, disabled, rows = 4, 
                     id={inputId}
                     rows={rows}
                     disabled={disabled}
+                    onChange={(event) => {
+                        onChange?.(event);
+                        onChangeValue?.(event.target.value);
+                    }}
                     aria-invalid={error || undefined}
                     aria-describedby={helperText ? helperId : undefined}
                     placeholder=" "
@@ -39,7 +58,7 @@ function TextArea({className, label, helperText, error, id, disabled, rows = 4, 
                         'peer-placeholder-shown:top-4 peer-placeholder-shown:translate-y-0'
                     )}
                 >
-                    {label}
+                    {optional ? `${label} (opcional)` : label}
                 </label>
             </div>
             {helperText ? (

@@ -222,6 +222,70 @@ o resto se ajusta sozinho. Sem ela, cai no fallback do sistema.
 
 O `Button` também aceita `loading` / `loadingText` (spinner do Mistica).
 
+## API idêntica ao Mistica original (única, sem legado)
+
+Os componentes expõem **somente as props que o Mistica define** — o TypeScript
+mostra uma API só, sem estilos alternativos para confundir. Quem vem do
+`@telefonica/mistica` usa as mesmas props; a migração é trocar o import. Prova: o
+corpo do fluxo de login em `src/examples/flows/` é idêntico nas duas
+implementações; só os imports mudam.
+
+Não existem mais: `Button` genérico (`variant`/`size`/`loading`/`onClick`),
+`onCheckedChange`/`onValueChange` (Radix) nos controles, `Icon`/`actions` nos
+cards e callouts, `showSnackbar`, `endAdornment` (agora `endIcon`), composições
+Radix de Select/Tabs (internas). Modais programáticos usam `alert`/`confirm`
+(monte `<DialogRoot/>` na raiz) ou os componentes controlados (`open`/`onOpenChange`).
+
+### Drop-in: trocar o import (ou nem isso)
+
+Ponto de entrada único em `@/components/mistica` (barrel com todos os
+componentes). A migração de um arquivo é trocar **uma linha**:
+
+```tsx
+// antes
+import {ButtonPrimary, EmailField, useSnackbar} from '@telefonica/mistica';
+// depois
+import {ButtonPrimary, EmailField, useSnackbar} from '@/components/mistica';
+```
+
+Ou **zero linhas**, com um alias no bundler do app consumidor apontando
+`@telefonica/mistica` para o nosso pacote. Para o nível do app existe o
+`ThemeContextProvider` de compatibilidade (aplica `colorScheme` e monta
+Snackbar/DialogRoot — não carrega contexto, o tema é CSS) e um stub de
+`getVivoSkin()`.
+
+**A garantia é demonstrada ao vivo**: cada fluxo de exemplo é **um único
+arquivo** (`src/examples/flows/login.tsx` etc.) que importa do alternador
+`src/examples/lib/mistica.tsx` — o seletor do lab decide **em runtime** qual
+lib atende o import (o nosso barrel ou o `@telefonica/mistica` real), e o lab
+exibe a linha de import trocando. Mesmo código, mesmas props, dois design
+systems. O alternador só compila porque as APIs coincidem, e o
+`paridade.test.ts` garante que todo nome usado existe nas duas libs. Limites
+conhecidos: ícones `Icon*`, `Form` e `Community*` (ver seção "O que ficou de
+fora").
+
+- **Botões**: `ButtonPrimary` / `ButtonSecondary` / `ButtonDanger` / `ButtonLink` /
+  `ButtonLinkDanger` com `onPress`, `small`, `showSpinner`, `loadingText`,
+  `submit`, `href`
+- **Campos**: todos aceitam `onChangeValue(value)`, `name`, `optional`;
+  `EmailField` incluído; `Select` por `options: [{value, text}]`
+- **Controles**: `Checkbox`/`Switch` com `onChange(checked)` e children como
+  rótulo; `RadioGroup onChange` + `RadioButton`; `Row` com
+  `switch/checkbox={{value, defaultValue, onChange}}` (linha toda alterna),
+  `onPress`, `badge`, `headline`
+- **Tipografia**: `Text1..Text10`, `Title1..Title4` com pesos booleanos
+  (`<Text2 medium>`)
+- **Feedback**: `useSnackbar().openSnackbar({message, type: 'INFORMATIVE'|'CRITICAL',
+  buttonText, onClose})`; `alert`/`confirm`/`dialog` imperativos (monte
+  `<DialogRoot/>` na raiz); `SuccessFeedbackScreen`/`ErrorFeedbackScreen` com
+  `primaryButton`/`secondaryButton`
+- **Conteúdo**: `Callout`/`EmptyState`/cards com `asset`, `button`,
+  `secondaryButton`, `buttonLink`; `Tabs` por `{tabs, selectedIndex, onChange}`
+  (a composição Radix segue como `TabsRoot`); `IconButton` com `Icon`, `onPress`,
+  `backgroundType`, `small`
+- **`ThemeVariant variant="inverse"`**: dentro de fundos brand, botões/links/textos
+  trocam para os tokens inversos automaticamente (via CSS vars)
+
 ## Exemplos — laboratório comparativo
 
 Botão **"Exemplos"** no header do showcase (código em `src/examples/`). Três fluxos

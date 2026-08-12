@@ -73,51 +73,76 @@ function CardContent({headline, pretitle, title, subtitle, description}: CardCon
     );
 }
 
-type DataCardProps = CardContentProps & {
-    Icon?: React.ComponentType<{className?: string}>;
-    actions?: React.ReactNode;
-    onPress?: () => void;
-    className?: string;
+type CardActionsProps = {
+    /** Como no Mistica: ButtonPrimary/Secondary e ButtonLink prontos. */
+    button?: React.ReactNode;
+    buttonLink?: React.ReactNode;
 };
 
+function CardActions({button, buttonLink}: CardActionsProps) {
+    if (!button && !buttonLink) {
+        return null;
+    }
+    return (
+        <div className="mt-auto flex flex-wrap items-center gap-3 pt-2">
+            {button}
+            {buttonLink}
+        </div>
+    );
+}
+
+type DataCardProps = CardContentProps &
+    CardActionsProps & {
+        /** Como no Mistica: elemento de icone pronto. */
+        icon?: React.ReactNode;
+        /** Conteudo extra entre a descricao e os botoes. */
+        extra?: React.ReactNode;
+        onPress?: () => void;
+        className?: string;
+    };
+
 /** DataCard: icone no topo + conteudo + acoes. */
-function DataCard({Icon, actions, onPress, className, ...content}: DataCardProps) {
+function DataCard({icon, extra, button, buttonLink, onPress, className, ...content}: DataCardProps) {
     return (
         <CardShell onPress={onPress} className={className}>
             <div className="flex flex-1 flex-col gap-4 p-(--mistica-card-padding)">
-                {Icon ? <Icon className="size-10 text-mistica-control-activated" aria-hidden /> : null}
+                {icon ? <div className="[&_svg]:size-10 [&_svg]:text-mistica-control-activated">{icon}</div> : null}
                 <CardContent {...content} />
-                {actions ? <div className="mt-auto flex flex-wrap gap-3 pt-2">{actions}</div> : null}
+                {extra}
+                <CardActions button={button} buttonLink={buttonLink} />
             </div>
         </CardShell>
     );
 }
 
-type MediaCardProps = CardContentProps & {
-    src: string;
-    alt?: string;
-    /** aspect ratio da midia; padrao 16/9 */
-    aspectRatio?: string;
-    actions?: React.ReactNode;
-    onPress?: () => void;
-    className?: string;
-};
+type MediaCardProps = CardContentProps &
+    CardActionsProps & {
+        src: string;
+        alt?: string;
+        /** aspect ratio da midia; padrao 16/9 */
+        aspectRatio?: string;
+        extra?: React.ReactNode;
+        onPress?: () => void;
+        className?: string;
+    };
 
 /** MediaCard: imagem no topo + conteudo + acoes. */
-function MediaCard({src, alt = '', aspectRatio = '16/9', actions, onPress, className, ...content}: MediaCardProps) {
+function MediaCard({src, alt = '', aspectRatio = '16/9', extra, button, buttonLink, onPress, className, ...content}: MediaCardProps) {
     return (
         <CardShell onPress={onPress} className={className}>
             <img src={src} alt={alt} className="w-full object-cover" style={{aspectRatio}} />
             <div className="flex flex-1 flex-col gap-4 p-(--mistica-card-padding)">
                 <CardContent {...content} />
-                {actions ? <div className="mt-auto flex flex-wrap gap-3 pt-2">{actions}</div> : null}
+                {extra}
+                <CardActions button={button} buttonLink={buttonLink} />
             </div>
         </CardShell>
     );
 }
 
 type SnapCardProps = {
-    Icon?: React.ComponentType<{className?: string}>;
+    /** Como no Mistica: elemento de icone pronto. */
+    icon?: React.ReactNode;
     title?: string;
     subtitle?: string;
     onPress?: () => void;
@@ -125,11 +150,11 @@ type SnapCardProps = {
 };
 
 /** SnapCard: card compacto de icone + titulo + subtitulo. */
-function SnapCard({Icon, title, subtitle, onPress, className}: SnapCardProps) {
+function SnapCard({icon, title, subtitle, onPress, className}: SnapCardProps) {
     return (
         <CardShell onPress={onPress} className={className}>
             <div className="grid gap-3 p-(--mistica-card-padding)">
-                {Icon ? <Icon className="size-8 text-mistica-control-activated" aria-hidden /> : null}
+                {icon ? <div className="[&_svg]:size-8 [&_svg]:text-mistica-control-activated">{icon}</div> : null}
                 <div className="grid gap-0.5">
                     {title ? (
                         <Text as="div" preset="card-title-snap" weight="medium">
@@ -202,24 +227,23 @@ function PosterCard({
     );
 }
 
-type DisplayDataCardProps = {
-    Icon?: React.ComponentType<{className?: string}>;
+type DisplayDataCardProps = CardActionsProps & {
+    /** Como no Mistica: elemento de icone pronto. */
+    icon?: React.ReactNode;
     headline?: React.ReactNode;
     pretitle?: string;
     title: string;
     description?: string;
-    /** Botao/acao no rodape. */
-    actions?: React.ReactNode;
     onPress?: () => void;
     className?: string;
 };
 
 /** DisplayDataCard: card de destaque com titulo grande (text6) e padding generoso. */
-function DisplayDataCard({Icon, headline, pretitle, title, description, actions, onPress, className}: DisplayDataCardProps) {
+function DisplayDataCard({icon, headline, pretitle, title, description, button, buttonLink, onPress, className}: DisplayDataCardProps) {
     return (
         <CardShell onPress={onPress} className={className}>
             <div className="flex flex-1 flex-col gap-6 p-(--mistica-card-padding)">
-                {Icon ? <Icon className="size-12 text-mistica-control-activated" aria-hidden /> : null}
+                {icon ? <div className="[&_svg]:size-12 [&_svg]:text-mistica-control-activated">{icon}</div> : null}
                 <div className="mt-auto grid gap-2 pt-8">
                     {headline ? <div>{headline}</div> : null}
                     {pretitle ? (
@@ -236,16 +260,16 @@ function DisplayDataCard({Icon, headline, pretitle, title, description, actions,
                         </Text>
                     ) : null}
                 </div>
-                {actions ? <div className="flex flex-wrap gap-3">{actions}</div> : null}
+                <CardActions button={button} buttonLink={buttonLink} />
             </div>
         </CardShell>
     );
 }
 
-type DisplayMediaCardProps = PosterCardProps & {
-    description?: string;
-    actions?: React.ReactNode;
-};
+type DisplayMediaCardProps = PosterCardProps &
+    CardActionsProps & {
+        description?: string;
+    };
 
 /** DisplayMediaCard: PosterCard com descricao e acoes no rodape. */
 function DisplayMediaCard({
@@ -255,7 +279,8 @@ function DisplayMediaCard({
     pretitle,
     title,
     description,
-    actions,
+    button,
+    buttonLink,
     aspectRatio = '7/10',
     onPress,
     className,
@@ -281,7 +306,12 @@ function DisplayMediaCard({
                         {description}
                     </Text>
                 ) : null}
-                {actions ? <div className="mt-3 flex flex-wrap gap-3">{actions}</div> : null}
+                {button || buttonLink ? (
+                    <div className="mt-3 flex flex-wrap items-center gap-3">
+                        {button}
+                        {buttonLink}
+                    </div>
+                ) : null}
             </div>
         </CardShell>
     );

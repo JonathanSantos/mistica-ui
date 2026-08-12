@@ -1,8 +1,9 @@
+import * as React from 'react';
 import {Check, CircleAlert, Info} from 'lucide-react';
 
 import {cn} from '@/lib/utils';
-import {Button} from '@/components/ui/button';
 import {Text} from '@/components/ui/text';
+import {ThemeVariant} from '@/components/ui/theme-variant';
 
 /**
  * FeedbackScreen Mistica: tela de resultado com icone, titulo, descricao
@@ -10,21 +11,27 @@ import {Text} from '@/components/ui/text';
  * successFeedback = inverse): fundo brand com textos/botoes invertidos.
  * Paddings do token feedbackScreenPadding (64 topo, 16/64 laterais).
  */
-type FeedbackAction = {
-    text: string;
-    onPress?: () => void;
-};
-
 type FeedbackScreenProps = {
     type: 'success' | 'error' | 'info';
     title: string;
     description?: string;
-    primaryAction?: FeedbackAction;
-    secondaryAction?: FeedbackAction;
+    /** Como no Mistica: ButtonPrimary/Secondary/Link prontos. No sucesso,
+     * o ThemeVariant inverse os estiliza automaticamente. */
+    primaryButton?: React.ReactNode;
+    secondaryButton?: React.ReactNode;
+    link?: React.ReactNode;
     className?: string;
 };
 
-function FeedbackScreen({type, title, description, primaryAction, secondaryAction, className}: FeedbackScreenProps) {
+function FeedbackScreen({
+    type,
+    title,
+    description,
+    primaryButton,
+    secondaryButton,
+    link,
+    className,
+}: FeedbackScreenProps) {
     const inverse = type === 'success';
 
     const icon =
@@ -76,35 +83,32 @@ function FeedbackScreen({type, title, description, primaryAction, secondaryActio
                     </Text>
                 ) : null}
             </div>
-            {primaryAction || secondaryAction ? (
-                <div className="mt-auto flex flex-col gap-3 pt-10 sm:flex-row">
-                    {primaryAction ? (
-                        <Button
-                            onClick={primaryAction.onPress}
-                            className={cn(
-                                inverse &&
-                                    'bg-mistica-button-primary-background-inverse text-mistica-text-button-primary-inverse hover:bg-mistica-button-primary-background-inverse-hover active:bg-mistica-button-primary-background-inverse-pressed'
-                            )}
-                        >
-                            {primaryAction.text}
-                        </Button>
-                    ) : null}
-                    {secondaryAction ? (
-                        <Button
-                            variant="secondary"
-                            onClick={secondaryAction.onPress}
-                            className={cn(
-                                inverse &&
-                                    'border-mistica-button-secondary-border-inverse text-mistica-text-button-secondary-inverse hover:bg-mistica-button-secondary-background-inverse-hover active:bg-mistica-button-secondary-background-inverse-pressed'
-                            )}
-                        >
-                            {secondaryAction.text}
-                        </Button>
-                    ) : null}
-                </div>
+            {primaryButton || secondaryButton || link ? (
+                <ThemeVariant variant={inverse ? 'inverse' : 'default'} className="mt-auto pt-10">
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                        {primaryButton}
+                        {secondaryButton}
+                        {link}
+                    </div>
+                </ThemeVariant>
             ) : null}
         </div>
     );
 }
 
-export {FeedbackScreen};
+type NamedFeedbackProps = Omit<FeedbackScreenProps, 'type'>;
+
+/** Como no Mistica original. */
+function SuccessFeedbackScreen(props: NamedFeedbackProps) {
+    return <FeedbackScreen type="success" {...props} />;
+}
+
+function ErrorFeedbackScreen(props: NamedFeedbackProps) {
+    return <FeedbackScreen type="error" {...props} />;
+}
+
+function InfoFeedbackScreen(props: NamedFeedbackProps) {
+    return <FeedbackScreen type="info" {...props} />;
+}
+
+export {FeedbackScreen, SuccessFeedbackScreen, ErrorFeedbackScreen, InfoFeedbackScreen};

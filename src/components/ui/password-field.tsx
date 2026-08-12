@@ -4,7 +4,7 @@ import {Eye, EyeOff} from 'lucide-react';
 import {TextField} from '@/components/ui/text-field';
 
 /** PasswordField Mistica: TextField com alternancia de visibilidade (olho). */
-type PasswordFieldProps = Omit<React.ComponentProps<typeof TextField>, 'type' | 'endAdornment'>;
+type PasswordFieldProps = Omit<React.ComponentProps<typeof TextField>, 'type' | 'endIcon'>;
 
 function PasswordField(props: PasswordFieldProps) {
     const [visible, setVisible] = React.useState(false);
@@ -12,7 +12,7 @@ function PasswordField(props: PasswordFieldProps) {
     return (
         <TextField
             type={visible ? 'text' : 'password'}
-            endAdornment={
+            endIcon={
                 <button
                     type="button"
                     aria-label={visible ? 'Ocultar senha' : 'Mostrar senha'}
