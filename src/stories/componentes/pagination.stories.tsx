@@ -1,25 +1,32 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import * as React from 'react';
 import {fn} from 'storybook/test';
 
-import {Pagination, Text} from '@/components/mistica';
+import {Pagination} from '@/components/mistica';
 
 /**
  * Pagination do Mistica: números de página com reticências, anterior/próximo
- * e página ativa em destaque (controlActivated).
- * API: `{page (1-based), totalPages, onPageChange}`.
+ * e página ativa em destaque. API do `@telefonica/mistica`: `totalPages`,
+ * `currentPage`/`defaultPage`, `onChange`, `surroundingPageCount`,
+ * `hideNavigationControls`/`hidePageList` e `mode="iconOnly"`.
  */
 const meta = {
     title: 'Componentes/Pagination',
     component: Pagination,
     args: {
-        page: 5,
+        defaultPage: 5,
         totalPages: 12,
-        onPageChange: fn(),
+        onChange: fn(),
+        disabled: false,
     },
     argTypes: {
-        page: {control: {type: 'number', min: 1}, description: 'Página atual (1-based)'},
+        defaultPage: {
+            control: {type: 'number', min: 1},
+            description: 'Página inicial (não controlado)',
+        },
         totalPages: {control: {type: 'number', min: 1}},
+        surroundingPageCount: {control: 'number', description: 'Vizinhas de cada lado da atual'},
+        mode: {control: 'select', options: ['default', 'iconOnly']},
+        disabled: {control: 'boolean'},
     },
 } satisfies Meta<typeof Pagination>;
 
@@ -32,31 +39,20 @@ export const Padrao: Story = {
 
 export const PoucasPaginas: Story = {
     name: 'Poucas páginas',
-    args: {page: 2, totalPages: 5},
+    args: {defaultPage: 2, totalPages: 5},
 };
 
 export const MuitasPaginas: Story = {
     name: 'Muitas páginas',
-    args: {page: 20, totalPages: 40},
+    args: {defaultPage: 20, totalPages: 40, surroundingPageCount: 2},
 };
 
-export const Interativo: Story = {
-    render: (args) => {
-        const [pagina, setPagina] = React.useState(1);
-        return (
-            <div className="grid gap-3">
-                <Text preset="text1" color="secondary">
-                    Histórico de faturas — página {pagina} de {args.totalPages}
-                </Text>
-                <Pagination
-                    page={pagina}
-                    totalPages={args.totalPages}
-                    onPageChange={(proxima) => {
-                        setPagina(proxima);
-                        args.onPageChange(proxima);
-                    }}
-                />
-            </div>
-        );
-    },
+export const SomenteIcones: Story = {
+    name: 'Modo iconOnly',
+    args: {mode: 'iconOnly'},
+};
+
+export const SemSetas: Story = {
+    name: 'Sem controles de navegação',
+    args: {hideNavigationControls: true},
 };

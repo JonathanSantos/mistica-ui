@@ -142,7 +142,7 @@ contrato de 305 tokens.
 | `PinField` | PinField | caixas OTP com avanço automático (input-otp) |
 | `CreditCardFields` (+ campos individuais) | CreditCardFields | número em grupos de 4, validade MM/AA (zero automático), CVV |
 | `TextArea` | TextField multiline | mesmo frame, multilinha |
-| `Rating` | Rating (community) | estrelas controlActivated, modo readOnly |
+| `Rating` / `InfoRating` | Rating / InfoRating | estrelas controlActivated; InfoRating exibe com meia estrela |
 | `Autocomplete` | Autocomplete | sugestões filtradas (sem acento), teclado, combobox acessível |
 | `TimeField` / `DateTimeField` / `MonthField` | idem | wrappers do DateField |
 | `DoubleField` | DoubleField | dois campos lado a lado (empilha no mobile) |
@@ -151,7 +151,7 @@ contrato de 305 tokens.
 | `Checkbox` | Checkbox | Radix, radius 4px, `controlActivated` |
 | `Switch` | Switch | estilo Android (trilho 34×14 + knob 20px), tokens `toggleAndroid*` |
 | `RadioGroup` | RadioButton | Radix radio group |
-| `Slider` | Slider | Radix, trilho `barTrack` + knob `controlActivated` |
+| `Slider` | Slider | trilho `barTrack` + knob `controlActivated`, `values` discretos e `tooltip` |
 
 **Feedback**
 
@@ -200,7 +200,7 @@ contrato de 305 tokens.
 | `Carousel` | Carousel | scroll-snap, setas no desktop, bullets (ativo alongado) |
 | `Table` | Table | boxed por padrão, header `textSecondary`, dividers |
 | `EmptyState` | EmptyState | ícone/imagem + título + descrição + ações |
-| `Counter` | Counter (community) | [- n +] com lixeira opcional no mínimo |
+| `Counter` | Counter | [- n +] com lixeira opcional no mínimo |
 | `Meter` | Meter (linear) | barra segmentada sobre `barTrack` |
 | `Hero` | Hero | fundos default/alternative/brand, heroPadding |
 | `CoverHero` | CoverHero | imagem de fundo + `backgroundOverlay` + conteúdo inverso |
@@ -209,7 +209,7 @@ contrato de 305 tokens.
 | `Timer` / `TextTimer` | Timer/TextTimer | contagem regressiva em caixas ou texto |
 | `Image` / `Video` | Image/Video | aspect ratio + radius do skin, fundo skeleton |
 | `ButtonFixedFooterLayout` | ButtonFixedFooterLayout | rodapé de botões sticky |
-| `Pagination` | Pagination | números com reticências, página ativa em destaque |
+| `Pagination` | Pagination | números com reticências, `surroundingPageCount`, modo `iconOnly` |
 | `Timeline` / `TimelineItem` | Timeline | estados completed/active/default, linha conectora |
 | `MasterDetailLayout` | MasterDetailLayout | lista + detalhe no desktop; um por vez no mobile |
 | `Header` / `HeaderLayout` / `MainSectionHeader` | idem | cabeçalhos de página (brand) e de seção |

@@ -338,7 +338,7 @@ function BasicosTab() {
 }
 
 function FormulariosTab() {
-    const [slider, setSlider] = React.useState([40]);
+    const [slider, setSlider] = React.useState(40);
 
     return (
         <div className="grid gap-6">
@@ -426,9 +426,9 @@ function FormulariosTab() {
 
             <Section title="Slider">
                 <div className="grid max-w-md gap-2">
-                    <Slider value={slider} onValueChange={setSlider} max={100} step={1} />
+                    <Slider name="franquia" value={slider} onChangeValue={setSlider} max={100} step={1} tooltip />
                     <Text preset="text1" color="secondary">
-                        {slider[0]} GB de franquia
+                        {slider} GB de franquia
                     </Text>
                 </div>
             </Section>
@@ -939,7 +939,7 @@ function RatingDemo() {
     const [rating, setRating] = React.useState(4);
     return (
         <div className="grid gap-2">
-            <Rating value={rating} onValueChange={setRating} />
+            <Rating value={rating} onChangeValue={setRating} />
             <Text preset="text1" color="secondary">
                 {rating} de 5 estrelas
             </Text>
@@ -1030,7 +1030,7 @@ function PaginationDemo() {
     const [pagina, setPagina] = React.useState(1);
     return (
         <div className="grid gap-2">
-            <Pagination page={pagina} totalPages={12} onPageChange={setPagina} />
+            <Pagination currentPage={pagina} totalPages={12} onChange={setPagina} />
             <Text preset="text1" color="secondary">
                 Página {pagina} de 12
             </Text>
@@ -1168,7 +1168,7 @@ function CounterDemo() {
     const [qty, setQty] = React.useState(1);
     return (
         <div className="flex items-center gap-4">
-            <Counter value={qty} onValueChange={setQty} min={0} max={10} onRemove={() => setQty(0)} />
+            <Counter value={qty} onChangeValue={setQty} min={0} max={10} onRemove={() => setQty(0)} />
             <Text preset="text2" color="secondary">
                 {qty} {qty === 1 ? 'chip adicional' : 'chips adicionais'}
             </Text>

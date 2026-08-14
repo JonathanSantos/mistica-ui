@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Testes do gerador de tokens (Python)
+        run: python3 scripts/test_generate_tokens.py
+
+      - name: Typecheck
+        run: npx tsc -b
+
+      - name: Testes unitários
+        run: npm test
+
+      - name: Build do app
+        run: npx vite build
+
+      - name: Build do Storybook
+        run: npm run build-storybook

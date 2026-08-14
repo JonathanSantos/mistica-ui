@@ -26,23 +26,29 @@ describe('paginasVisiveis', () => {
 
 describe('Pagination', () => {
     it('marca a pagina atual e navega', () => {
-        const onPageChange = vi.fn();
-        render(<Pagination page={2} totalPages={5} onPageChange={onPageChange} />);
+        const onChange = vi.fn();
+        render(<Pagination currentPage={2} totalPages={5} onChange={onChange} />);
 
         expect(screen.getByLabelText('Página 2')).toHaveAttribute('aria-current', 'page');
         fireEvent.click(screen.getByLabelText('Página 4'));
-        expect(onPageChange).toHaveBeenCalledWith(4);
+        expect(onChange).toHaveBeenCalledWith(4);
         fireEvent.click(screen.getByLabelText('Próxima página'));
-        expect(onPageChange).toHaveBeenCalledWith(3);
+        expect(onChange).toHaveBeenCalledWith(3);
+    });
+
+    it('nao controlado navega sozinho a partir de defaultPage', () => {
+        render(<Pagination defaultPage={1} totalPages={5} />);
+        fireEvent.click(screen.getByLabelText('Página 3'));
+        expect(screen.getByLabelText('Página 3')).toHaveAttribute('aria-current', 'page');
     });
 
     it('desabilita anterior na primeira pagina', () => {
-        render(<Pagination page={1} totalPages={5} onPageChange={() => {}} />);
+        render(<Pagination currentPage={1} totalPages={5} onChange={() => {}} />);
         expect(screen.getByLabelText('Página anterior')).toBeDisabled();
     });
 
     it('nao renderiza com 1 pagina', () => {
-        const {container} = render(<Pagination page={1} totalPages={1} onPageChange={() => {}} />);
+        const {container} = render(<Pagination currentPage={1} totalPages={1} onChange={() => {}} />);
         expect(container).toBeEmptyDOMElement();
     });
 });

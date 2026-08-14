@@ -1,65 +1,49 @@
-import * as React from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {fn} from 'storybook/test';
 
-import {Rating} from '@/components/mistica';
+import {InfoRating, Rating} from '@/components/mistica';
 
 /**
- * Rating do Mistica (community): estrelas selecionáveis, controladas por
- * `value`/`onValueChange`, com `max`, `size` e modo `readOnly`.
+ * Rating do Mistica: estrelas selecionáveis com `value`/`defaultValue`,
+ * `onChangeValue`, `count` e `size` — mesma API do `@telefonica/mistica`.
+ * Para exibição somente leitura use o `InfoRating` (com meia estrela via
+ * `withHalfValue`).
  */
 const meta = {
     title: 'Componentes/Rating',
     component: Rating,
     args: {
-        value: 3,
-        onValueChange: fn(),
-        max: 5,
-        readOnly: false,
+        defaultValue: 3,
+        onChangeValue: fn(),
+        count: 5,
         size: 32,
+        disabled: false,
     },
     argTypes: {
-        value: {control: 'number', description: 'Estrelas preenchidas'},
-        max: {control: 'number', description: 'Total de estrelas'},
+        defaultValue: {control: 'number', description: 'Estrelas preenchidas (não controlado)'},
+        count: {control: 'number', description: 'Total de estrelas'},
         size: {control: 'number', description: 'Tamanho de cada estrela em px'},
-        readOnly: {control: 'boolean', description: 'Somente exibição, sem interação'},
+        disabled: {control: 'boolean'},
     },
 } satisfies Meta<typeof Rating>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const RatingInterativo = (args: React.ComponentProps<typeof Rating>) => {
-    const [nota, setNota] = React.useState(args.value);
-    return (
-        <Rating
-            {...args}
-            value={nota}
-            onValueChange={(valor) => {
-                setNota(valor);
-                args.onValueChange?.(valor);
-            }}
-        />
-    );
-};
-
 export const Padrao: Story = {
     name: 'Padrão',
-    render: (args) => <RatingInterativo {...args} />,
 };
 
-export const SomenteLeitura: Story = {
-    name: 'Somente leitura',
-    args: {value: 4, readOnly: true},
+export const DezEstrelas: Story = {
+    name: 'Com 10 estrelas',
+    args: {defaultValue: 7, count: 10, size: 24},
 };
 
-export const MaximoDez: Story = {
-    name: 'Máximo de 10',
-    args: {value: 7, max: 10, size: 24},
-    render: (args) => <RatingInterativo {...args} />,
+export const Desabilitado: Story = {
+    args: {defaultValue: 2, disabled: true},
 };
 
-export const Pequeno: Story = {
-    args: {value: 2, size: 20},
-    render: (args) => <RatingInterativo {...args} />,
+export const Exibicao: Story = {
+    name: 'InfoRating (exibição)',
+    render: () => <InfoRating value={4.5} withHalfValue aria-label="Nota do atendimento" />,
 };
