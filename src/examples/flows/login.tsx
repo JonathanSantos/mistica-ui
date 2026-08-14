@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
     ButtonLink,
     ButtonPrimary,
@@ -8,6 +7,7 @@ import {
     Stack,
     Text5,
     useSnackbar,
+    useState,
 } from '@/examples/lib/mistica';
 
 import {autenticarMock, validarEmail, validarSenha} from '@/examples/lib/validation';
@@ -19,11 +19,11 @@ import {autenticarMock, validarEmail, validarSenha} from '@/examples/lib/validat
  */
 export function Login() {
     const {openSnackbar} = useSnackbar();
-    const [email, setEmail] = React.useState('');
-    const [senha, setSenha] = React.useState('');
-    const [erros, setErros] = React.useState<{email?: string; senha?: string}>({});
-    const [erroServidor, setErroServidor] = React.useState<string | null>(null);
-    const [carregando, setCarregando] = React.useState(false);
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [erros, setErros] = useState<{email?: string; senha?: string}>({});
+    const [erroServidor, setErroServidor] = useState<string | null>(null);
+    const [carregando, setCarregando] = useState(false);
 
     const entrar = async () => {
         const novosErros: typeof erros = {};

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
     Avatar,
     Inline,
@@ -10,6 +9,7 @@ import {
     Text4,
     Title1,
     useSnackbar,
+    useState,
 } from '@/examples/lib/mistica';
 
 /**
@@ -19,8 +19,8 @@ import {
  */
 export function Conta() {
     const {openSnackbar} = useSnackbar();
-    const [prefs, setPrefs] = React.useState({roaming: true, cincoG: true, faturaDigital: false});
-    const [assinaturaAtiva, setAssinaturaAtiva] = React.useState(true);
+    const [prefs, setPrefs] = useState({roaming: true, cincoG: true, faturaDigital: false});
+    const [assinaturaAtiva, setAssinaturaAtiva] = useState(true);
 
     const alternar = (chave: keyof typeof prefs) => (checked: boolean) =>
         setPrefs((p) => ({...p, [chave]: checked}));

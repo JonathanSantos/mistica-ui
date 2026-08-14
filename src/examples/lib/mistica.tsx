@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Original from '@telefonica/mistica';
 
 import * as Nosso from '@/components/mistica';
+import {useState} from '@/examples/lib/estado-compartilhado';
 
 /**
  * Alternador de design system dos exemplos: os fluxos importam deste modulo
@@ -119,6 +120,9 @@ export {
     DsProvider,
     especificadorDoImport,
     NOMES_ALTERNADOS,
+    // useState do lab: compartilhado entre paineis no lado a lado,
+    // React.useState comum fora dele
+    useState,
     type Ds,
     // API identica a do Mistica, com a lib decidida em runtime:
     Avatar,

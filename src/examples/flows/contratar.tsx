@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
     Boxed,
     ButtonLink,
@@ -18,6 +17,7 @@ import {
     Text2,
     Text3,
     TextField,
+    useState,
 } from '@/examples/lib/mistica';
 
 import {
@@ -39,15 +39,15 @@ const PASSOS = ['Plano', 'Dados', 'Pagamento'];
  * mistica-ui ou o @telefonica/mistica original. Mesmo codigo, dois DS.
  */
 export function Contratar() {
-    const [passo, setPasso] = React.useState(0);
-    const [plano, setPlano] = React.useState(PLANOS[1].id);
-    const [nome, setNome] = React.useState('');
-    const [cpf, setCpf] = React.useState('');
-    const [celular, setCelular] = React.useState('');
-    const [cartao, setCartao] = React.useState({numero: '', validade: '', cvv: ''});
-    const [erros, setErros] = React.useState<Record<string, string>>({});
-    const [carregando, setCarregando] = React.useState(false);
-    const [concluido, setConcluido] = React.useState(false);
+    const [passo, setPasso] = useState(0);
+    const [plano, setPlano] = useState(PLANOS[1].id);
+    const [nome, setNome] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [celular, setCelular] = useState('');
+    const [cartao, setCartao] = useState({numero: '', validade: '', cvv: ''});
+    const [erros, setErros] = useState<Record<string, string>>({});
+    const [carregando, setCarregando] = useState(false);
+    const [concluido, setConcluido] = useState(false);
 
     const planoEscolhido = PLANOS.find((p) => p.id === plano)!;
 

@@ -9,7 +9,8 @@ import {SnackbarProvider} from '@/components/ui/snackbar';
 import {Tabs} from '@/components/ui/tabs';
 import {Text} from '@/components/ui/text';
 import {aplicarCorNossa, aplicarCorOriginal, COR_PADRAO, skinMisticaComCor} from '@/examples/lib/color';
-import {DsProvider, especificadorDoImport} from '@/examples/lib/mistica';
+import {DsProvider, especificadorDoImport, type Ds} from '@/examples/lib/mistica';
+import {criarEscopo, EscopoDeEstado, InstanciaDeEstado, type Escopo} from '@/examples/lib/estado-compartilhado';
 import {Conta} from '@/examples/flows/conta';
 import {Contratar} from '@/examples/flows/contratar';
 import {Login} from '@/examples/flows/login';
@@ -19,7 +20,7 @@ import {Login} from '@/examples/flows/login';
  * implementados no NOSSO mistica-ui e no Mistica ORIGINAL, com controles de
  * design system, tema, skin (nosso) e cor de marca (ambos).
  */
-type Ds = 'nosso' | 'original';
+type ModoDs = Ds | 'lado-a-lado';
 
 const CORES_PRESET = [
     {nome: 'Vivo', valor: COR_PADRAO},
@@ -27,6 +28,43 @@ const CORES_PRESET = [
     {nome: 'Verde', valor: '#1E7D46'},
     {nome: 'Rosa', valor: '#EB3D7D'},
 ];
+
+function PainelFluxo({
+    ds,
+    fluxoId,
+    elemento,
+    rotulo,
+    legenda,
+}: {
+    ds: Ds;
+    fluxoId: string;
+    elemento: React.ReactNode;
+    rotulo?: string;
+    legenda?: string;
+}) {
+    return (
+        <div className="grid content-start gap-3">
+            <div className="overflow-x-auto rounded-mistica-media-small bg-mistica-background-alternative px-4 py-2.5 font-mono text-xs whitespace-nowrap text-mistica-text-secondary">
+                {rotulo ? (
+                    <span className="mr-3 font-sans font-medium text-mistica-text-primary">{rotulo}</span>
+                ) : null}
+                {'import {…} from '}
+                <span className="font-bold text-mistica-text-activated transition-colors">
+                    {especificadorDoImport(ds)}
+                </span>
+                {';'}
+                {legenda ? (
+                    <span className="ml-3 font-sans text-mistica-text-secondary">{legenda}</span>
+                ) : null}
+            </div>
+            <div className="rounded-mistica-container border border-mistica-border bg-mistica-background-container px-4">
+                <DsProvider ds={ds}>
+                    <InstanciaDeEstado key={fluxoId}>{elemento}</InstanciaDeEstado>
+                </DsProvider>
+            </div>
+        </div>
+    );
+}
 
 function ControleGrupo({rotulo, children}: {rotulo: string; children: React.ReactNode}) {
     return (
@@ -40,11 +78,20 @@ function ControleGrupo({rotulo, children}: {rotulo: string; children: React.Reac
 }
 
 export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
-    const [ds, setDs] = React.useState<Ds>('nosso');
+    const [ds, setDs] = React.useState<ModoDs>('nosso');
     const [escuro, setEscuro] = React.useState(false);
     const [skinCompacta, setSkinCompacta] = React.useState(false);
     const [cor, setCor] = React.useState<string | null>(null);
     const [fluxoAtivo, setFluxoAtivo] = React.useState(0);
+    // um store de estado por fluxo: os dois paineis do lado a lado leem e
+    // escrevem no mesmo, e o estado sobrevive a troca de DS e de modo
+    const escoposRef = React.useRef(new Map<string, Escopo>());
+    const obterEscopo = (id: string): Escopo => {
+        if (!escoposRef.current.has(id)) {
+            escoposRef.current.set(id, criarEscopo());
+        }
+        return escoposRef.current.get(id)!;
+    };
 
     // Tema escuro do NOSSO (classe .dark); o do original vai via colorScheme
     React.useEffect(() => {
@@ -103,7 +150,7 @@ export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
     return (
         <div className="min-h-screen bg-mistica-background">
             <header className="bg-mistica-background-brand px-4 py-5 lg:px-12">
-                <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
+                <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <button
                             type="button"
@@ -125,7 +172,7 @@ export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
                 </div>
             </header>
 
-            <main className="mx-auto grid max-w-4xl gap-6 px-4 py-6 lg:px-0">
+            <main className="mx-auto grid max-w-[1200px] gap-6 px-4 py-6 lg:px-6">
                 <section className="rounded-mistica-container border border-mistica-border bg-mistica-background-container p-(--mistica-card-padding)">
                     <div className="grid gap-5 lg:grid-cols-4">
                         <ControleGrupo rotulo="Design system">
@@ -134,6 +181,9 @@ export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
                             </Chip>
                             <Chip active={ds === 'original'} onPress={() => setDs('original')}>
                                 Original
+                            </Chip>
+                            <Chip active={ds === 'lado-a-lado'} onPress={() => setDs('lado-a-lado')}>
+                                Lado a lado
                             </Chip>
                         </ControleGrupo>
                         <ControleGrupo rotulo="Tema (ambos)">
@@ -189,23 +239,33 @@ export default function ExamplesPage({onVoltar}: {onVoltar: () => void}) {
                     selectedIndex={fluxoAtivo}
                     onChange={setFluxoAtivo}
                     renderPanel={(index) => (
-                        <div className="grid gap-3">
-                            <div className="overflow-x-auto rounded-mistica-media-small bg-mistica-background-alternative px-4 py-2.5 font-mono text-xs whitespace-nowrap text-mistica-text-secondary">
-                                {'import {…} from '}
-                                <span className="font-bold text-mistica-text-activated transition-colors">
-                                    {especificadorDoImport(ds)}
-                                </span>
-                                {';'}
-                                <span className="ml-3 font-sans text-mistica-text-secondary">
-                                    ← mesmo arquivo de fluxo; o seletor troca só a lib
-                                </span>
-                            </div>
-                            <div className="rounded-mistica-container border border-mistica-border bg-mistica-background-container px-4">
-                                <ThemeContextProvider theme={misticaTheme}>
-                                    <DsProvider ds={ds}>{fluxos[index].elemento}</DsProvider>
-                                </ThemeContextProvider>
-                            </div>
-                        </div>
+                        <ThemeContextProvider theme={misticaTheme}>
+                            <EscopoDeEstado escopo={obterEscopo(fluxos[index].id)}>
+                                {ds === 'lado-a-lado' ? (
+                                    <div className="grid gap-4 lg:grid-cols-2">
+                                        <PainelFluxo
+                                            ds="nosso"
+                                            rotulo="Nosso"
+                                            fluxoId={fluxos[index].id}
+                                            elemento={fluxos[index].elemento}
+                                        />
+                                        <PainelFluxo
+                                            ds="original"
+                                            rotulo="Original"
+                                            fluxoId={fluxos[index].id}
+                                            elemento={fluxos[index].elemento}
+                                        />
+                                    </div>
+                                ) : (
+                                    <PainelFluxo
+                                        ds={ds}
+                                        fluxoId={fluxos[index].id}
+                                        elemento={fluxos[index].elemento}
+                                        legenda="← mesmo arquivo de fluxo; o seletor troca só a lib"
+                                    />
+                                )}
+                            </EscopoDeEstado>
+                        </ThemeContextProvider>
                     )}
                 />
 

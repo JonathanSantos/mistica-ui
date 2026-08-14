@@ -304,7 +304,18 @@ compartilhada (`src/examples/lib/validation.ts`):
 
 Controles no topo:
 
-- **Design system**: alterna entre o nosso e o original com 1 clique
+- **Design system**: alterna entre o nosso e o original com 1 clique — ou
+  **"Lado a lado"**, que renderiza o MESMO arquivo de fluxo nos dois DS
+  simultaneamente (painel esquerdo nosso, direito original, cada um com sua
+  linha de import); tema e cor recolorem os dois painéis juntos, e a skin
+  compacta afeta só o lado nosso. **O estado é espelhado**: digitar num
+  painel atualiza o outro em tempo real — pattern de store externo com
+  chave posicional de hook (`src/examples/lib/estado-compartilhado.tsx`):
+  como os dois painéis rodam o mesmo arquivo, a posição de cada `useState`
+  identifica o valor num store compartilhado por fluxo. A única mudança nos
+  fluxos é importar `useState` do alternador em vez do React (fora do lab,
+  degrada para o `useState` comum). O estado também sobrevive à troca de
+  DS, de modo e de aba de fluxo.
 - **Tema**: claro/escuro nos dois (classe `dark` no nosso; `colorScheme` +
   `data-mistica-color-scheme` no original)
 - **Skin**: vivo ↔ vivo-new-system (só o nosso)
