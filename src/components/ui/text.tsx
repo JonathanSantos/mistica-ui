@@ -130,10 +130,13 @@ type NamedTextProps = {
 };
 
 function criarTextoNomeado(preset: TextPreset, asPadrao: React.ElementType = 'p') {
-    return function TextoNomeado({light, regular, medium, bold, as, ...rest}: NamedTextProps) {
+    function TextoNomeado({light, regular, medium, bold, as, ...rest}: NamedTextProps) {
         const weight = bold ? 'bold' : medium ? 'medium' : regular ? 'regular' : light ? 'light' : undefined;
         return <Text preset={preset} weight={weight} as={as ?? asPadrao} {...rest} />;
-    };
+    }
+    // 'text2' -> 'Text2', 'title1' -> 'Title1' (devtools e Storybook)
+    TextoNomeado.displayName = preset.charAt(0).toUpperCase() + preset.slice(1);
+    return TextoNomeado;
 }
 
 const Text1 = criarTextoNomeado('text1');

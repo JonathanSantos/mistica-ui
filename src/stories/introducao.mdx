@@ -1,0 +1,54 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+<Meta title="Introdução" />
+
+# Mistica UI
+
+Recriação do design system **[Mistica](https://github.com/Telefonica/mistica-web)** (Telefónica)
+sobre a arquitetura do **shadcn/ui** — Radix + Tailwind v4 + cva — mantendo os design tokens e a
+identidade visual do Mistica com **API pública 100% idêntica** ao `@telefonica/mistica`.
+
+A skin padrão é a **vivo** (a "new-vivo" do Mistica).
+
+## Como navegar
+
+- A barra lateral espelha a organização do
+  [Storybook público do Mistica](https://mistica-web.vercel.app): **Componentes**, **Padrões**,
+  **Layout** e **Utilitários**.
+- Cada página de docs tem a tabela de props e o botão **Show code** em cada exemplo; no modo
+  story, o painel **Code** mostra o fonte completo do exemplo.
+- Use os **Controls** para mexer nas props ao vivo.
+
+## Toolbar
+
+Três controles globais (no topo) afetam todas as stories:
+
+- **Skin** — alterna entre `vivo` (padrão) e `vivo-new-system` (densidade compacta para
+  sistemas internos);
+- **Tema** — claro / escuro (classe `dark` + tokens de dark mode);
+- **Cor de marca** — recolore os tokens em runtime (mostra que o DS é dirigido por tokens).
+
+## Drop-in do Mistica original
+
+Todos os componentes usam a API do Mistica (`onPress`, `onChangeValue`, `showSpinner`,
+`openSnackbar`…). Em um app que já usa `@telefonica/mistica`, basta um alias no bundler para
+`@/components/mistica` — o código dos componentes não muda:
+
+```ts
+// vite.config.ts
+resolve: {
+    alias: {
+        '@telefonica/mistica': path.resolve(__dirname, 'src/components/mistica'),
+    },
+},
+```
+
+A paridade é garantida por testes (`src/examples/__tests__/paridade.test.ts`) e demonstrada no
+lab de exemplos do projeto (`npm run dev`), que renderiza os mesmos fluxos com as duas
+bibliotecas lado a lado.
+
+## Tokens
+
+Os tokens vêm dos JSON oficiais do `mistica-design`, convertidos em CSS custom properties
+(`--mistica-*`) por um gerador Python com suporte a `extends`, escopo por skin e **densidade**
+(alturas/paddings por skin). Editar `tokens/*.json` regenera o CSS com hot-reload.

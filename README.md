@@ -18,8 +18,27 @@ Skin padrão: **new-vivo** — no Mistica atual o skin "Vivo-new" foi renomeado 
 
 ```bash
 npm install
-npm run dev
+npm run dev        # showcase + laboratório de exemplos
+npm run storybook  # catálogo de componentes (http://localhost:6006)
 ```
+
+## Storybook
+
+Catálogo interativo em `npm run storybook`, seguindo como base a organização do
+[Storybook público do Mistica](https://mistica-web.vercel.app) (Componentes, Padrões,
+Layout, Utilitários), mas com as práticas atuais do Storybook:
+
+- **CSF3 + autodocs**: toda story tem página de docs com tabela de props e controls.
+- **Exemplos de código habilitados** (o do Mistica original não tem): botão *Show code*
+  em cada exemplo e painel *Code* com o fonte completo da story.
+- **Toolbar global**: skin (`vivo` padrão / `vivo-new-system` compacta), tema
+  claro/escuro e cor de marca aplicada em runtime nos tokens.
+- **Addon de acessibilidade** (axe) em todas as stories.
+- As stories importam do barrel `@/components/mistica` — o código exibido é exatamente
+  o que um app escreveria usando a API do Mistica.
+
+Arquivos em `src/stories/`, config em `.storybook/`. Build estático:
+`npm run build-storybook` (sai em `storybook-static/`).
 
 ## Arquitetura dos tokens
 

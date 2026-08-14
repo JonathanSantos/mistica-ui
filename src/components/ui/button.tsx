@@ -100,8 +100,12 @@ type MisticaButtonProps = {
     className?: string;
 };
 
-function criarBotaoMistica(variant: 'primary' | 'secondary' | 'danger' | 'link', extraClassName?: string) {
-    return function BotaoMistica({
+function criarBotaoMistica(
+    nome: string,
+    variant: 'primary' | 'secondary' | 'danger' | 'link',
+    extraClassName?: string
+) {
+    function BotaoMistica({
         children,
         onPress,
         small,
@@ -143,14 +147,18 @@ function criarBotaoMistica(variant: 'primary' | 'secondary' | 'danger' | 'link',
                 {children}
             </Button>
         );
-    };
+    }
+    // Nome publico nos devtools e no codigo gerado pelo Storybook
+    BotaoMistica.displayName = nome;
+    return BotaoMistica;
 }
 
-const ButtonPrimary = criarBotaoMistica('primary');
-const ButtonSecondary = criarBotaoMistica('secondary');
-const ButtonDanger = criarBotaoMistica('danger');
-const ButtonLink = criarBotaoMistica('link');
+const ButtonPrimary = criarBotaoMistica('ButtonPrimary', 'primary');
+const ButtonSecondary = criarBotaoMistica('ButtonSecondary', 'secondary');
+const ButtonDanger = criarBotaoMistica('ButtonDanger', 'danger');
+const ButtonLink = criarBotaoMistica('ButtonLink', 'link');
 const ButtonLinkDanger = criarBotaoMistica(
+    'ButtonLinkDanger',
     'link',
     'text-mistica-text-link-danger active:bg-mistica-button-link-danger-background-pressed'
 );
