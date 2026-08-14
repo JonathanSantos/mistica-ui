@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-webpack5';
 import {fn} from 'storybook/test';
 
 import {Breadcrumbs} from '@/components/mistica';

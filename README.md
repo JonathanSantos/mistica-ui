@@ -9,8 +9,9 @@ Skin padrão: **new-vivo** — no Mistica atual o skin "Vivo-new" foi renomeado 
 
 ## Stack
 
-- Vite + React 19 + TypeScript
-- Tailwind CSS v4 (`@theme inline`)
+- webpack 5 (swc-loader + webpack-dev-server) + React 19 + TypeScript
+- Tailwind CSS v4 via PostCSS (`@tailwindcss/postcss`, `@theme inline`)
+- Vitest para os testes (pipeline próprio, independente do build)
 - Radix UI primitives (checkbox, switch, radio, select, label, slot)
 - class-variance-authority + tailwind-merge (padrão shadcn)
 
@@ -70,8 +71,9 @@ src/index.css                     # mapeia tokens Mistica -> nomes semânticos s
 ### Testando mudanças de tokens
 
 O dev server observa `tokens/*.json`: **salve o JSON e o browser atualiza na hora**
-(plugin `mistica-tokens` no `vite.config.ts` roda o generator e o Vite faz hot-reload
-do CSS). Para regenerar manualmente: `npm run tokens`.
+(o plugin `scripts/mistica-tokens-webpack-plugin.mjs` roda o generator no início do
+build e a cada mudança no watch, e o HMR aplica o CSS regenerado — o app e o
+Storybook usam o mesmo plugin). Para regenerar manualmente: `npm run tokens`.
 
 ### Skin vivo-new-system (denso, para sistemas internos)
 
@@ -238,8 +240,6 @@ contrato de 305 tokens.
 O stack de fontes é `'Vivo Type', 'Roboto', ...`. A Vivo Type é proprietária — se você
 tiver os arquivos, adicione os `@font-face` em `src/index.css` (ou em um CSS próprio) que
 o resto se ajusta sozinho. Sem ela, cai no fallback do sistema.
-
-O `Button` também aceita `loading` / `loadingText` (spinner do Mistica).
 
 ## API idêntica ao Mistica original (única, sem legado)
 

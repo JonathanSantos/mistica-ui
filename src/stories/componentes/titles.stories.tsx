@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-webpack5';
 
 import {Text, Title1, Title2, Title3, Title4} from '@/components/mistica';
 

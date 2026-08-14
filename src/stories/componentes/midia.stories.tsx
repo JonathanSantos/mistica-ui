@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-webpack5';
 import {Smartphone, Wifi} from 'lucide-react';
 
 import {Circle, Image, Square, Video} from '@/components/mistica';

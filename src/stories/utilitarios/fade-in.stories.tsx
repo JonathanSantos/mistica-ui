@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-webpack5';
 
 import {ButtonSecondary, FadeIn, Placeholder, Stack} from '@/components/mistica';
 

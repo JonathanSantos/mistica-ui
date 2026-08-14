@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-webpack5';
 import {fn} from 'storybook/test';
 
 import {ButtonLink, Carousel, MediaCard} from '@/components/mistica';

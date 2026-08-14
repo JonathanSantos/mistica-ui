@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-webpack5';
 import {Bell} from 'lucide-react';
 
 import {Badge, IconButton} from '@/components/mistica';

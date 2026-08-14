@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type {Decorator, Preview} from '@storybook/react-vite';
+import type {Decorator, Preview} from '@storybook/react-webpack5';
 
 import {ThemeContextProvider} from '../src/components/ui/theme-context-provider';
 import {aplicarCorNossa} from '../src/examples/lib/color';

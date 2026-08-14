@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/react-vite';
+import type {Meta, StoryObj} from '@storybook/react-webpack5';
 import {Info} from 'lucide-react';
 
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/mistica';
