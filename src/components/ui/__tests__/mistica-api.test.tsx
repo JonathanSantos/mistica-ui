@@ -3,6 +3,7 @@ import {describe, expect, it, vi} from 'vitest';
 
 import {ButtonPrimary, ButtonSecondary} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
+import {GridLayout} from '@/components/ui/grid-layout';
 import {Row} from '@/components/ui/row';
 import {Select} from '@/components/ui/select';
 import {Text2} from '@/components/ui/text';
@@ -97,5 +98,28 @@ describe('Text nomeado (API Mistica)', () => {
     it('Text2 medium aplica peso 500', () => {
         render(<Text2 medium>Corpo</Text2>);
         expect(screen.getByText('Corpo')).toHaveStyle({fontWeight: '500'});
+    });
+});
+
+describe('GridLayout (API Mistica)', () => {
+    it('template 8+4: left e right nos spans oficiais, com verticalSpace', () => {
+        render(
+            <GridLayout
+                template="8+4"
+                verticalSpace={16}
+                left={<div>conteudo</div>}
+                right={<div>resumo</div>}
+            />
+        );
+        const grid = screen.getByTestId('GridLayout');
+        expect(grid.children).toHaveLength(2);
+        expect((grid.children[0] as HTMLElement).style.getPropertyValue('--mistica-grid-col-span')).toBe('8');
+        expect((grid.children[1] as HTMLElement).style.getPropertyValue('--mistica-grid-col-span')).toBe('4');
+        expect(grid.style.getPropertyValue('--mistica-grid-vertical-space')).toBe('16px');
+    });
+
+    it('dataAttributes ganha prefixo data-', () => {
+        render(<GridLayout dataAttributes={{qsysid: 'grid'}}>conteudo</GridLayout>);
+        expect(screen.getByTestId('GridLayout')).toHaveAttribute('data-qsysid', 'grid');
     });
 });

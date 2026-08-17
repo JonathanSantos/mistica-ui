@@ -35,6 +35,7 @@ export * from '@/components/ui/empty-state';
 export * from '@/components/ui/fade-in';
 export * from '@/components/ui/feedback-screen';
 export * from '@/components/ui/file-upload';
+export * from '@/components/ui/grid-layout';
 export * from '@/components/ui/header';
 export * from '@/components/ui/hero';
 export * from '@/components/ui/horizontal-scroll';
