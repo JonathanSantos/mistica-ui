@@ -4,6 +4,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {ButtonPrimary, ButtonSecondary} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
 import {GridLayout} from '@/components/ui/grid-layout';
+import {Image} from '@/components/ui/image';
 import {Row} from '@/components/ui/row';
 import {Select} from '@/components/ui/select';
 import {Text2} from '@/components/ui/text';
@@ -121,5 +122,22 @@ describe('GridLayout (API Mistica)', () => {
     it('dataAttributes ganha prefixo data-', () => {
         render(<GridLayout dataAttributes={{qsysid: 'grid'}}>conteudo</GridLayout>);
         expect(screen.getByTestId('GridLayout')).toHaveAttribute('data-qsysid', 'grid');
+    });
+});
+
+describe('Image — width/height como no Mistica', () => {
+    it('sem width/height preenche o container (w-full)', () => {
+        const {container} = render(<Image src="/x.svg" alt="x" />);
+        const img = container.querySelector('img')!;
+        expect(img.className).toContain('w-full');
+        expect(img.style.width).toBe('');
+    });
+
+    it('com width fixa o tamanho e não estica (asset de Row)', () => {
+        const {container} = render(<Image src="/x.svg" alt="x" width={64} aspectRatio="1:1" />);
+        const img = container.querySelector('img')!;
+        expect(img.className).not.toContain('w-full');
+        expect(img.style.width).toBe('64px');
+        expect(img.style.aspectRatio).toBe('1/1');
     });
 });

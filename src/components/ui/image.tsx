@@ -15,8 +15,11 @@ const RATIOS: Record<Exclude<AspectRatio, 'auto'>, string> = {
     '7:10': '7/10',
 };
 
-type ImageProps = Omit<React.ComponentProps<'img'>, 'alt'> & {
+type ImageProps = Omit<React.ComponentProps<'img'>, 'alt' | 'width' | 'height'> & {
     alt?: string;
+    /** Largura fixa (px ou CSS). Sem width/height a imagem preenche o container. */
+    width?: number | string;
+    height?: number | string;
     aspectRatio?: AspectRatio;
     /** true: radius de container (24px) em vez de mediaSmall (12px). */
     roundedContainer?: boolean;
@@ -27,23 +30,31 @@ type ImageProps = Omit<React.ComponentProps<'img'>, 'alt'> & {
 function Image({
     className,
     alt = '',
+    width,
+    height,
     aspectRatio = 'auto',
     roundedContainer = false,
     noBorderRadius = false,
     style,
     ...props
 }: ImageProps) {
+    // Como no Mistica: width/height explícitos fixam o tamanho (ex.: asset de
+    // 64px numa Row); sem eles a imagem ocupa o container (card, hero).
+    const fixed = width !== undefined || height !== undefined;
     return (
         <img
             data-slot="image"
             alt={alt}
             className={cn(
-                'w-full bg-mistica-background-skeleton object-cover',
+                'bg-mistica-background-skeleton object-cover',
+                !fixed && 'w-full',
                 !noBorderRadius && (roundedContainer ? 'rounded-mistica-container' : 'rounded-mistica-media-small'),
                 className
             )}
             style={{
                 ...(aspectRatio !== 'auto' && {aspectRatio: RATIOS[aspectRatio]}),
+                ...(width !== undefined && {width}),
+                ...(height !== undefined && {height}),
                 ...style,
             }}
             {...props}
